@@ -7,7 +7,7 @@ class TinymceHelper extends AppHelper {
  * @var array
  * @access public
  */
-	public $helpers = array('Javascript', 'Html');
+	public $helpers = array('Html');
 
 /**
  * 
@@ -51,7 +51,9 @@ class TinymceHelper extends AppHelper {
 		foreach ($options as $option => $value) {
 			$lines .= Inflector::underscore($option) . ' : "' . $value . '",' . "\n";
 		}
-		$this->_editors .= 'tinyMCE.init({' . "\n" . $lines . '});' . "\n";
+
+		$this->Html->scriptBlock('tinyMCE.init({' . "\n" . $lines . '});' . "\n", array(
+			'inline' => false));
 	}
 
 /**
@@ -59,8 +61,6 @@ class TinymceHelper extends AppHelper {
  */
 	public function beforeRender() {
 		$this->Html->script('/tiny_mce/js/tiny_mce/tiny_mce.js', false);
-		$this->Javascript->codeBlock($this->_editors, array(
-			'inline' => true));
 	}
 
 }
