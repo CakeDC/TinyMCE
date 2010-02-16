@@ -20,14 +20,6 @@ class TinymceHelper extends AppHelper {
 /**
  * 
  *
- * @var string
- * @access protected
- */
-	protected $_editors = '';
-
-/**
- * 
- *
  * @var array
  * @access protected
  */
@@ -41,8 +33,12 @@ class TinymceHelper extends AppHelper {
  * @access public
  */
 	public function editor($options = array()) {
-		if (is_string($options) && isset($this->configs[$options])) {
-			$options = $this->configs[$options];
+		if (is_string($options)) {
+			if (isset($this->configs[$options])) {
+				$options = $this->configs[$options];
+			} else {
+				throw new OutOfBoundsException(sprintf(__('Invalid TinyMce configuration %s', true), $options));
+			}
 		}
 
 		$options = array_merge($this->_defaults, $options);
