@@ -57,7 +57,10 @@ class TinymceHelper extends AppHelper {
 	}
 
 /**
- * 
+ * beforeRender callback
+ *
+ * @return void
+ * @access public
  */
 	public function beforeRender() {
 		$this->Html->script('/tiny_mce/js/tiny_mce/tiny_mce.js', false);
