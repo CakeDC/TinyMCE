@@ -1,4 +1,26 @@
 <?php
+/**
+ * CakePHP TinyMce Plugin
+ *
+ * Copyright 2009 - 2010, Cake Development Corporation
+ *                        1785 E. Sahara Avenue, Suite 490-423
+ *                        Las Vegas, Nevada 89104
+ *
+ * Licensed under The MIT License
+ * Redistributions of files must retain the above copyright notice.
+ *
+ * @copyright 2009 - 2010, Cake Development Corporation (http://cakedc.com)
+ * @link      http://github.com/CakeDC/TinyMce
+ * @package   plugins.tags
+ * @license   MIT License (http://www.opensource.org/licenses/mit-license.php)
+ */
+
+/**
+ * Short description for class.
+ *
+ * @package  plugins.tiny_mce
+ */
+
 class TinymceHelper extends AppHelper {
 
 /**
@@ -28,6 +50,7 @@ class TinymceHelper extends AppHelper {
 /**
  * Adds a new editor to the script block in the head
  *
+ * @see http://wiki.moxiecode.com/index.php/TinyMCE:Configuration for a list of keys
  * @param mixed If array TinyMce Init config keys, if string it checks if a config with that name exists
  * @return void
  * @access public
@@ -37,7 +60,7 @@ class TinymceHelper extends AppHelper {
 			if (isset($this->configs[$options])) {
 				$options = $this->configs[$options];
 			} else {
-				throw new OutOfBoundsException(sprintf(__('Invalid TinyMce configuration %s', true), $options));
+				throw new OutOfBoundsException(sprintf(__('Invalid TinyMce configuration preset %s', true), $options));
 			}
 		}
 
