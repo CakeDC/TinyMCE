@@ -26,14 +26,13 @@ class TinyMceTestCase extends CakeTestCase {
  * @var object TinyMceHelper
  * @access public
  */
-	public $TinyMce;
+	public $TinyMce = null;
 
 /**
  * @var array
  * @access public
  */
-	public $configs = array(
-		'testConfig' => array());
+	public $configs = array('testConfig' => array());
 
 /**
  * startTest
@@ -87,8 +86,8 @@ class TinyMceTestCase extends CakeTestCase {
  */
 	public function testBeforeRender() {
 		$this->TinyMce->beforeRender();
-		//debug($this->View->__scripts);
+		$this->assertTrue(isset($this->View->__scripts[0]));
+		$this->assertEqual($this->View->__scripts[0], '<script type="text/javascript" src="/tiny_mce/js/tiny_mce/tiny_mce.js"></script>');
 	}
-
 }
 ?>
