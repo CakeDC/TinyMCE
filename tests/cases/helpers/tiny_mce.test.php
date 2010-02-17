@@ -32,7 +32,15 @@ class TinyMceTestCase extends CakeTestCase {
  * @var array
  * @access public
  */
-	public $configs = array('testConfig' => array());
+	public $configs = array(
+		'simple' => array(
+			'mode' => 'textareas',
+			'theme' => 'simple',
+			'editor_selector' => 'mceSimple'),
+		'advanced' => array(
+			'mode' => 'textareas',
+			'theme' => 'advanced',
+			'editor_selector' => 'mceAdvanced'));
 
 /**
  * startTest
@@ -70,9 +78,28 @@ class TinyMceTestCase extends CakeTestCase {
 	public function testEditor() {
 		$this->TinyMce->editor(array(
 			'theme' => 'advanced'));
+		$this->assertEqual($this->View->__scripts[0], '<script type="text/javascript">
+//<![CDATA[
+tinyMCE.init({
+theme : "advanced",
+});
+
+//]]>
+</script>');
+
 
 		$this->TinyMce->configs = $this->configs;
-		$this->TinyMce->editor('testConfig');
+		$this->TinyMce->editor('simple');
+		$this->assertEqual($this->View->__scripts[1], '<script type="text/javascript">
+//<![CDATA[
+tinyMCE.init({
+mode : "textareas",
+theme : "simple",
+editor_selector : "mceSimple",
+});
+
+//]]>
+</script>');
 
 		$this->expectException('OutOfBoundsException');
 		$this->TinyMce->editor('invalid-config');

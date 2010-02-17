@@ -51,7 +51,7 @@ class TinymceHelper extends AppHelper {
  * Adds a new editor to the script block in the head
  *
  * @see http://wiki.moxiecode.com/index.php/TinyMCE:Configuration for a list of keys
- * @param mixed If array TinyMce Init config keys, if string it checks if a config with that name exists
+ * @param mixed If array camel cased TinyMce Init config keys, if string it checks if a config with that name exists
  * @return void
  * @access public
  */
