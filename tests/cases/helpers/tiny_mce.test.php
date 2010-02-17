@@ -36,6 +36,8 @@ class TinyMceTestCase extends CakeTestCase {
 		'testConfig' => array());
 
 /**
+ * startTest
+ *
  * @return void
  * @access public
  */
@@ -44,11 +46,15 @@ class TinyMceTestCase extends CakeTestCase {
 		Router::reload();
 		$null = null;
 		$this->View = new View($null);
+		ClassRegistry::removeObject('view');
+		ClassRegistry::addObject('view', $this->View);
 		$this->TinyMce = new TinyMceHelper();
 		$this->TinyMce->Html = new HtmlHelper();
 	}
 
 /**
+ * endTest
+ *
  * @return void
  * @access public
  */
@@ -57,17 +63,31 @@ class TinyMceTestCase extends CakeTestCase {
 	}
 
 /**
+ * testEditor
+ *
  * @return void
  * @access public
  */
 	public function testEditor() {
-		ClassRegistry::removeObject('view');
-		ClassRegistry::addObject('view', $this->View);
 		$this->TinyMce->editor(array(
 			'theme' => 'advanced'));
 
+		$this->TinyMce->configs = $this->configs;
+		$this->TinyMce->editor('testConfig');
+
 		$this->expectException('OutOfBoundsException');
 		$this->TinyMce->editor('invalid-config');
+	}
+
+/**
+ * testBeforeRender
+ *
+ * @return void
+ * @access public
+ */
+	public function testBeforeRender() {
+		$this->TinyMce->beforeRender();
+		//debug($this->View->__scripts);
 	}
 
 }
