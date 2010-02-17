@@ -3,14 +3,14 @@ Copyright 2009 - 2010, Cake Development Corporation
                         Las Vegas, Nevada 89104
                         http://cakedc.com
 
-TinyMce Plugin
+TinyMCE Plugin
 
-The purpose of placing TinyMce in a plugin is to keep it separate from a themed
+The purpose of placing TinyMCE in a plugin is to keep it separate from a themed
 view, the regular webroot or the app in general, which makes it easier to update
 and overall follows the idea of keeping the code clean and modular.
 
-The TinyMce helper is basically just a convenience helper that allows you to use
-php and CakePHP conventions to generate the configuration for TinyMce and as an
+The TinyMCE helper is basically just a convenience helper that allows you to use
+php and CakePHP conventions to generate the configuration for TinyMCE and as an
 extra it allows you to load configs.
 
 
@@ -20,7 +20,7 @@ There two ways you can use this plugin, simply use the helper or load the editor
 	$this->Html->script('/tiny_mce/js/tiny_mce/tiny_mce.js', false);
 }}}
 and placing your own script in the head of the page. Please note that the helper
-will auto add the TinyMce editor script to the header of the page. No need to
+will auto add the TinyMCE editor script to the header of the page. No need to
 to that by hand if you use the helper.
 
 == How to use the helper ==
@@ -37,7 +37,7 @@ array.
 		'theme' => 'advanced'));
 }}}
 
-You can find a list of possible configration keys for TinyMce here
+You can find a list of possible configration keys for TinyMCE here
 http://wiki.moxiecode.com/index.php/TinyMCE:Configuration for a list of keys
 
 == Advanced usage of the helper ==

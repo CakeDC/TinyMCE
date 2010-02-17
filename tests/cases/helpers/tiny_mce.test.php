@@ -1,20 +1,19 @@
 <?php
 /**
- * CakePHP TinyMce Plugin
+ * CakePHP TinyMCE Plugin
  *
  * Copyright 2009 - 2010, Cake Development Corporation
  *                        1785 E. Sahara Avenue, Suite 490-423
  *                        Las Vegas, Nevada 89104
  *
- * Licensed under The MIT License
+ * Licensed under The LGPL License
  * Redistributions of files must retain the above copyright notice.
  *
  * @copyright 2009 - 2010, Cake Development Corporation (http://cakedc.com)
- * @link      http://github.com/CakeDC/TinyMce
- * @package   plugins.tags
- * @license   MIT License (http://www.opensource.org/licenses/mit-license.php)
+ * @link      http://github.com/CakeDC/TinyMCE
+ * @package   plugins.tiny_mce.tests.cases.helpers
+ * @license   LGPL License (http://www.opensource.org/licenses/lgpl-2.1.php)
  */
-
 App::import('Core', array('View', 'Helper'));
 App::import('Helper', array('Html', 'TinyMce.TinyMce'));
 
