@@ -113,9 +113,9 @@
 
 					if ((ed.pasteAsPlainText) && (!cookie.get("tinymcePasteText"))) {
 						if (getParam(ed, "paste_text_sticky")) {
-							ed.windowManager.alert("Paste is now in plain text mode. Click again to toggle back to regular paste mode. After you paste something you will be returned to regular paste mode.");
+							ed.windowManager.alert(ed.translate('paste.plaintext_mode_sticky'));
 						} else {
-							ed.windowManager.alert("Paste is now in plain text mode. Click again to toggle back to regular paste mode.");
+							ed.windowManager.alert(ed.translate('paste.plaintext_mode_sticky'));
 						}
 
 						if (!getParam(ed, "paste_text_notifyalways")) {
@@ -133,6 +133,13 @@
 			// is done it grabs that contents and processes that
 			function grabContent(e) {
 				var n, or, rng, sel = ed.selection, dom = ed.dom, body = ed.getBody(), posY;
+
+				// Check if browser supports direct plaintext access
+				if (ed.pasteAsPlainText && (e.clipboardData || dom.doc.dataTransfer)) {
+					e.preventDefault();
+					process({content : (e.clipboardData || dom.doc.dataTransfer).getData('Text')}, true);
+					return;
+				}
 
 				if (dom.get('_mcePaste'))
 					return;
@@ -207,8 +214,12 @@
 								dom.remove(n, 1);
 							});
 
-							// Contents in WebKit is sometimes wrapped in a apple style span so we need to grab it from that one
-							h += (dom.select('> span.Apple-style-span div', n)[0] || dom.select('> span.Apple-style-span', n)[0] || n).innerHTML;
+							// Remove apply style spans
+							each(dom.select('span.Apple-style-span', n), function(n) {
+								dom.remove(n, 1);
+							});
+
+							h += n.innerHTML;
 						});
 
 						// Remove the nodes
@@ -649,7 +660,7 @@
 		 * This logic can be improved so text nodes at the start/end remain in the start/end block elements
 		 */
 		_insertBlockContent : function(ed, dom, content) {
-			var parentBlock, marker, sel = ed.selection, last, elm, vp, y, elmHeight;
+			var parentBlock, marker, sel = ed.selection, last, elm, vp, y, elmHeight, markerId = 'mce_marker';
 
 			function select(n) {
 				var r;
@@ -666,8 +677,8 @@
 			}
 
 			// Insert a marker for the caret position
-			this._insert('<span id="_marker">&nbsp;</span>', 1);
-			marker = dom.get('_marker');
+			this._insert('<span id="' + markerId + '">&nbsp;</span>', 1);
+			marker = dom.get(markerId);
 			parentBlock = dom.getParent(marker, 'p,h1,h2,h3,h4,h5,h6,ul,ol,th,td');
 
 			// If it's a parent block but not a table cell
@@ -688,7 +699,9 @@
 				sel.collapse(0);
 			}
 
-			dom.remove('_marker'); // Remove marker if it's left
+			// Remove marker if it's left
+			while (elm = dom.get(markerId))
+				dom.remove(elm);
 
 			// Get element, position and height
 			elm = sel.getStart();
@@ -705,10 +718,10 @@
 		 * Inserts the specified contents at the caret position.
 		 */
 		_insert : function(h, skip_undo) {
-			var ed = this.editor;
+			var ed = this.editor, r = ed.selection.getRng();
 
-			// First delete the contents seems to work better on WebKit
-			if (!ed.selection.isCollapsed())
+			// First delete the contents seems to work better on WebKit when the selection spans multiple list items or multiple table cells.
+			if (!ed.selection.isCollapsed() && r.startContainer != r.endContainer)
 				ed.getDoc().execCommand('Delete', false, null);
 
 			// It's better to use the insertHTML method on Gecko since it will combine paragraphs correctly before inserting the contents
