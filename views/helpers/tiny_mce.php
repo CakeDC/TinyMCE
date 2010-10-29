@@ -1,24 +1,19 @@
 <?php
 /**
- * CakePHP TinyMCE Plugin
- *
- * Copyright 2009 - 2010, Cake Development Corporation
- *                        1785 E. Sahara Avenue, Suite 490-423
- *                        Las Vegas, Nevada 89104
+ * Copyright 2009-2010, Cake Development Corporation (http://cakedc.com)
  *
  * Licensed under The LGPL License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright 2009 - 2010, Cake Development Corporation (http://cakedc.com)
- * @link      http://github.com/CakeDC/TinyMCE
- * @package   plugins.tiny_mce
- * @license   LGPL License (http://www.opensource.org/licenses/lgpl-2.1.php)
+ * @copyright Copyright 2009-2010, Cake Development Corporation (http://cakedc.com)
+ * @license LGPL License (http://www.opensource.org/licenses/lgpl-2.1.php)
  */
 
 /**
- * Short description for class.
+ * TinyMCE Helper
  *
- * @package  plugins.tiny_mce.views.helpers
+ * @package tiny_m_c_e
+ * @subpackage tiny_m_c_e.views.helpers
  */
 
 class TinymceHelper extends AppHelper {
@@ -27,23 +22,20 @@ class TinymceHelper extends AppHelper {
  * Other helpers used by FormHelper
  *
  * @var array
- * @access public
  */
 	public $helpers = array('Html');
 
 /**
- * 
+ * Configuration
  *
  * @var array
- * @access public
  */
 	public $configs = array();
 
 /**
- * 
+ * Default values
  *
  * @var array
- * @access protected
  */
 	protected $_defaults = array();
 
@@ -53,7 +45,6 @@ class TinymceHelper extends AppHelper {
  * @see http://wiki.moxiecode.com/index.php/TinyMCE:Configuration for a list of keys
  * @param mixed If array camel cased TinyMce Init config keys, if string it checks if a config with that name exists
  * @return void
- * @access public
  */
 	public function editor($options = array()) {
 		if (is_string($options)) {
@@ -77,10 +68,8 @@ class TinymceHelper extends AppHelper {
  * beforeRender callback
  *
  * @return void
- * @access public
  */
 	public function beforeRender() {
 		$this->Html->script('/tiny_mce/js/tiny_mce/tiny_mce.js', false);
 	}
 }
-?>
