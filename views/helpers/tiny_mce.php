@@ -80,6 +80,10 @@ class TinymceHelper extends AppHelper {
  * @access public
  */
 	public function beforeRender() {
+		$appOptions = Configure::read('TinyMCE.editorOptions');
+		if ($appOptions !== false && is_array($appOptions)) {
+			$this->_defaults = $appOptions;
+		}
 		$this->Html->script('/tiny_mce/js/tiny_mce/tiny_mce.js', false);
 	}
 }
