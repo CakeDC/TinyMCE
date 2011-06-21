@@ -106,7 +106,7 @@
 			ed.addButton(RESTORE_DRAFT, {
 				title : PLUGIN_NAME + ".restore_content",
 				onclick : function() {
-					if (ed.getContent({draft: true}).replace(/\s|&nbsp;|<\/?p[^>]*>|<br[^>]*>/gi, "").length > 0) {
+					if (ed.getContent().replace(/\s|&nbsp;|<\/?p[^>]*>|<br[^>]*>/gi, "").length > 0) {
 						// Show confirm dialog if the editor isn't empty
 						ed.windowManager.confirm(
 							PLUGIN_NAME + ".warning_message",
@@ -257,24 +257,15 @@
 
 								userDataElement.setAttribute(key, value);
 								userDataElement.expires = self.getExpDate();
-
-								try {
-									userDataElement.save("TinyMCE");
-								} catch (e) {
-									// Ignore, saving might fail if "Userdata Persistence" is disabled in IE
-								}
+								userDataElement.save("TinyMCE");
 							},
 
 							getItem : function(key) {
 								var userDataElement = ed.getElement();
 
-								try {
-									userDataElement.load("TinyMCE");
-									return userDataElement.getAttribute(key);
-								} catch (e) {
-									// Ignore, loading might fail if "Userdata Persistence" is disabled in IE
-									return null;
-								}
+								userDataElement.load("TinyMCE");
+
+								return userDataElement.getAttribute(key);
 							},
 
 							removeItem : function(key) {
@@ -312,7 +303,7 @@
 					return;
 
 				// Store contents if the contents if longer than the minlength of characters
-				content = editor.getContent({draft: true});
+				content = editor.getContent();
 				if (content.length > editor.settings.autosave_minlength) {
 					expires = self.getExpDate();
 

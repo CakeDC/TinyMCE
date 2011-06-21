@@ -70,8 +70,10 @@
 					t._done();
 			});
 
-			if (ed.settings.content_css !== false)
-				ed.contentCSS.push(url + '/css/content.css');
+			ed.onInit.add(function() {
+				if (ed.settings.content_css !== false)
+					ed.dom.loadCSS(url + '/css/content.css');
+			});
 
 			ed.onClick.add(t._showMenu, t);
 			ed.onContextMenu.add(t._showMenu, t);
@@ -130,9 +132,6 @@
 						var o = {icon : 1}, mi;
 
 						o.onclick = function() {
-							if (v == t.selectedLang) {
-								return;
-							}
 							mi.setSelected(1);
 							t.selectedItem.setSelected(0);
 							t.selectedItem = mi;
@@ -221,11 +220,21 @@
 		},
 
 		_markWords : function(wl) {
-			var ed = this.editor, dom = ed.dom, doc = ed.getDoc(), se = ed.selection, b = se.getBookmark(), nl = [],
-				w = wl.join('|'), re = this._getSeparators(), rx = new RegExp('(^|[' + re + '])(' + w + ')(?=[' + re + ']|$)', 'g');
+			var r1, r2, r3, r4, r5, w = '', ed = this.editor, re = this._getSeparators(), dom = ed.dom, nl = [];
+			var se = ed.selection, b = se.getBookmark();
+
+			each(wl, function(v) {
+				w += (w ? '|' : '') + v;
+			});
+
+			r1 = new RegExp('([' + re + '])(' + w + ')([' + re + '])', 'g');
+			r2 = new RegExp('^(' + w + ')', 'g');
+			r3 = new RegExp('(' + w + ')([' + re + ']?)$', 'g');
+			r4 = new RegExp('^(' + w + ')([' + re + ']?)$', 'g');
+			r5 = new RegExp('(' + w + ')([' + re + '])', 'g');
 
 			// Collect all text nodes
-			this._walk(ed.getBody(), function(n) {
+			this._walk(this.editor.getBody(), function(n) {
 				if (n.nodeType == 3) {
 					nl.push(n);
 				}
@@ -233,49 +242,18 @@
 
 			// Wrap incorrect words in spans
 			each(nl, function(n) {
-				var node, elem, txt, pos, v = n.nodeValue;
+				var v;
 
-				if (rx.test(v)) {
-					// Encode the content
-					v = dom.encode(v);
-					// Create container element
-					elem = dom.create('span', {'class' : 'mceItemHidden'});
+				if (n.nodeType == 3) {
+					v = n.nodeValue;
 
-					// Following code fixes IE issues by creating text nodes
-					// using DOM methods instead of innerHTML.
-					// Bug #3124: <PRE> elements content is broken after spellchecking.
-					// Bug #1408: Preceding whitespace characters are removed
-					// @TODO: I'm not sure that both are still issues on IE9.
-					if (tinymce.isIE) {
-						// Enclose mispelled words with temporal tag
-						v = v.replace(rx, '$1<mcespell>$2</mcespell>');
-						// Loop over the content finding mispelled words
-						while ((pos = v.indexOf('<mcespell>')) != -1) {
-							// Add text node for the content before the word
-							txt = v.substring(0, pos);
-							if (txt.length) {
-								node = doc.createTextNode(dom.decode(txt));
-								elem.appendChild(node);
-							}
-							v = v.substring(pos+10);
-							pos = v.indexOf('</mcespell>');
-							txt = v.substring(0, pos);
-							v = v.substring(pos+11);
-							// Add span element for the word
-							elem.appendChild(dom.create('span', {'class' : 'mceItemHiddenSpellWord'}, txt));
-						}
-						// Add text node for the rest of the content
-						if (v.length) {
-							node = doc.createTextNode(dom.decode(v));
-							elem.appendChild(node);
-						}
-					} else {
-						// Other browsers preserve whitespace characters on innerHTML usage
-						elem.innerHTML = v.replace(rx, '$1<span class="mceItemHiddenSpellWord">$2</span>');
+					if (r1.test(v) || r2.test(v) || r3.test(v) || r4.test(v)) {
+						v = dom.encode(v);
+						v = v.replace(r5, '<span class="mceItemHiddenSpellWord">$1</span>$2');
+						v = v.replace(r3, '<span class="mceItemHiddenSpellWord">$1</span>$2');
+
+						dom.replace(dom.create('span', {'class' : 'mceItemHidden'}, v), n);
 					}
-
-					// Finally, replace the node with the container
-					dom.replace(elem, n);
 				}
 			});
 
@@ -288,7 +266,15 @@
 			e = 0; // Fixes IE memory leak
 
 			if (!m) {
-				m = ed.controlManager.createDropMenu('spellcheckermenu', {'class' : 'mceNoIcons'});
+				p1 = DOM.getPos(ed.getContentAreaContainer());
+				//p2 = DOM.getPos(ed.getContainer());
+
+				m = ed.controlManager.createDropMenu('spellcheckermenu', {
+					offset_x : p1.x,
+					offset_y : p1.y,
+					'class' : 'mceNoIcons'
+				});
+
 				t._menu = m;
 			}
 
@@ -351,6 +337,7 @@
 						}
 					});
 
+
 					if (t.editor.getParam("spellchecker_enable_learn_rpc")) {
 						m.add({
 							title : 'spellchecker.learn_word',
@@ -370,10 +357,6 @@
 
 					m.update();
 				});
-
-				p1 = DOM.getPos(ed.getContentAreaContainer());
-				m.settings.offset_x = p1.x;
-				m.settings.offset_y = p1.y;
 
 				ed.selection.select(wordSpan);
 				p1 = dom.getPos(wordSpan);

@@ -79,7 +79,7 @@
 			rep(/<br>/gi,"\n");
 			rep(/<p>/gi,"");
 			rep(/<\/p>/gi,"\n");
-			rep(/&nbsp;|\u00a0/gi," ");
+			rep(/&nbsp;/gi," ");
 			rep(/&quot;/gi,"\"");
 			rep(/&lt;/gi,"<");
 			rep(/&gt;/gi,">");
