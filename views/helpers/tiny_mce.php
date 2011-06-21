@@ -60,7 +60,10 @@ class TinymceHelper extends AppHelper {
 		foreach ($options as $option => $value) {
 			$lines .= Inflector::underscore($option) . ' : "' . $value . '",' . "\n";
 		}
-		$this->Html->scriptBlock('tinyMCE.init({' . "\n" . $lines . '});' . "\n", array(
+		// remove last comma from lines to avoid the editor breaking in Internet Explorer
+		$lines = rtrim($lines);
+		$lines = rtrim($lines, ',');
+		$this->Html->scriptBlock('tinyMCE.init({' . "\n" . $lines . "\n" . '});' . "\n", array(
 			'inline' => false));
 	}
 
