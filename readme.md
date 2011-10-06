@@ -4,6 +4,8 @@ The purpose of placing TinyMCE in a plugin is to keep it separate from a themed
 view, the regular webroot or the app in general, which makes it easier to update
 and overall follows the idea of keeping the code clean and modular.
 
+To use TiniMCE you need to clone git repository in plugins/tiny_mce
+
 The TinyMCE helper is basically just a convenience helper that allows you to use
 php and CakePHP conventions to generate the configuration for TinyMCE and as an
 extra it allows you to load configs.
