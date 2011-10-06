@@ -48,6 +48,7 @@ class TinyMceTestCase extends CakeTestCase {
  * @access public
  */
 	public function startTest() {
+		Configure::delete('TinyMCE');
 		ClassRegistry::flush();
 		Router::reload();
 		$null = null;
@@ -102,6 +103,40 @@ editor_selector : "mceSimple",
 
 		$this->expectException('OutOfBoundsException');
 		$this->TinyMce->editor('invalid-config');
+	}
+
+/**
+ * testEditor with app wide options
+ *
+ * @return void
+ * @access public
+ */
+	public function testEditorWithDefaults() {
+		$this->assertTrue(Configure::write('TinyMCE.editorOptions', array('height' => '100px')));
+
+		$this->TinyMce->beforeRender();
+		$this->TinyMce->editor(array(
+			'theme' => 'advanced'));
+		$this->assertEqual($this->View->__scripts[1], '<script type="text/javascript">
+//<![CDATA[
+tinyMCE.init({
+height : "100px",
+theme : "advanced",
+});
+
+//]]>
+</script>');
+
+		$this->TinyMce->editor(array(
+			'height' => '50px'));
+		$this->assertEqual($this->View->__scripts[2], '<script type="text/javascript">
+//<![CDATA[
+tinyMCE.init({
+height : "50px",
+});
+
+//]]>
+</script>');
 	}
 
 /**

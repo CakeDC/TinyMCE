@@ -4,6 +4,8 @@ The purpose of placing TinyMCE in a plugin is to keep it separate from a themed
 view, the regular webroot or the app in general, which makes it easier to update
 and overall follows the idea of keeping the code clean and modular.
 
+To use TiniMCE you need to clone git repository in plugins/tiny_mce
+
 The TinyMCE helper is basically just a convenience helper that allows you to use
 php and CakePHP conventions to generate the configuration for TinyMCE and as an
 extra it allows you to load configs.
@@ -37,6 +39,8 @@ http://wiki.moxiecode.com/index.php/TinyMCE:Configuration for a list of keys
 
 ## Advanced usage of the helper ##
 
+### Multiple configurations
+
 The helper has a configs property which can be filled with data from database
 or a config file. How you store, get and pass that data to the helper is up to
 you. The configs property of the helper takes an array with named keys where 
@@ -61,6 +65,19 @@ of the configuration in the array:
 
 	$this->TinyMce->editor(array(
 		'theme' => 'advanced'));
+
+### App wide default options
+
+If you want a quick way to configure default values for all the TinyMCE Editors
+of an application, you could use the 'TinyMCE.editorOptions' configuration.
+
+Here is an example of a line you could have in `bootstrap.php`:
+
+	Configure::write('TinyMCE.editorOptions', array('height' => '300px'))
+
+It will make all editors to have a 300px height. You may want to override this
+value for a single editor. To do so, just pass the option to the editor() method
+and it will override the default value.
 
 
 You can always check the tests to see how to use the helper.
