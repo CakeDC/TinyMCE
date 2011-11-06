@@ -12,11 +12,11 @@
 /**
  * TinyMCE Helper
  *
- * @package tiny_m_c_e
- * @subpackage tiny_m_c_e.views.helpers
+ * @package TinyMCE
+ * @subpackage TinyMCE.View.Helper
  */
 
-class TinyMceHelper extends AppHelper {
+class TinyMCEHelper extends AppHelper {
 
 /**
  * Other helpers used by FormHelper
@@ -42,8 +42,8 @@ class TinyMceHelper extends AppHelper {
 /**
  * Adds a new editor to the script block in the head
  *
- * @see http://wiki.moxiecode.com/index.php/TinyMCE:Configuration for a list of keys
- * @param mixed If array camel cased TinyMce Init config keys, if string it checks if a config with that name exists
+ * @see http://www.tinymce.com/wiki.php/Configuration for a list of keys
+ * @param mixed If array camel cased TinyMCE Init config keys, if string it checks if a config with that name exists
  * @return void
  */
 	public function editor($options = array()) {
@@ -56,15 +56,14 @@ class TinyMceHelper extends AppHelper {
 		}
 		$options = array_merge($this->_defaults, $options);
 		$lines = '';
-		
+
 		foreach ($options as $option => $value) {
 			$lines .= Inflector::underscore($option) . ' : "' . $value . '",' . "\n";
 		}
 		// remove last comma from lines to avoid the editor breaking in Internet Explorer
 		$lines = rtrim($lines);
 		$lines = rtrim($lines, ',');
-		$this->Html->scriptBlock('tinyMCE.init({' . "\n" . $lines . "\n" . '});' . "\n", array(
-			'inline' => false));
+		$this->Html->scriptBlock('tinymce.init({' . "\n" . $lines . "\n" . '});' . "\n", array('inline' => false));
 	}
 
 /**
@@ -77,6 +76,6 @@ class TinyMceHelper extends AppHelper {
 		if ($appOptions !== false && is_array($appOptions)) {
 			$this->_defaults = $appOptions;
 		}
-		$this->Html->script('/tiny_mce/js/tiny_mce/tiny_mce.js', false);
+		$this->Html->script('/tiny_mce/js/tiny_mce/tiny_mce.js', array('inline' => false));
 	}
 }
