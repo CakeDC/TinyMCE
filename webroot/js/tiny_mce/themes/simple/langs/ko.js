@@ -1,11 +1,1 @@
-tinyMCE.addI18n('ko.simple',{
-bold_desc:"\uAD75\uC740 \uAE00\uC528(Ctrl+B)",
-italic_desc:"\uC774\uD0E4\uB9AD(Ctrl+I)",
-underline_desc:"\uBC11\uC904(Ctrl+U)",
-striketrough_desc:"\uCDE8\uC18C\uC120",
-bullist_desc:"\uBE44\uC21C\uCC28\uBAA9\uB85D",
-numlist_desc:"\uC21C\uCC28\uBAA9\uB85D",
-undo_desc:"\uC2E4\uD589\uCDE8\uC18C(Ctrl+Z)",
-redo_desc:"\uB2E4\uC2DC\uC2E4\uD589(Ctrl+Y)",
-cleanup_desc:"\uC9C0\uC800\uBD84\uD55C \uCF54\uB4DC \uC0AD\uC81C"
-});
+tinyMCE.addI18n('ko.simple',{"cleanup_desc":"\ubcf5\uc7a1\ud55c \ucf54\ub4dc \uc815\ub9ac","redo_desc":"\ub2e4\uc2dc \uc2e4\ud589(Ctrl Y)","undo_desc":"\uc2e4\ud589 \ucde8\uc18c(Ctrl Z)","numlist_desc":"\ubc88\ud638 \ubaa9\ub85d","bullist_desc":"\uae30\ud638 \ubaa9\ub85d","striketrough_desc":"\ucde8\uc18c\uc120","underline_desc":"\ubc11\uc904(Ctrl+U)","italic_desc":"\uae30\uc6b8\uc778 \uae00\uaf34(Ctrl I)","bold_desc":"\uad75\uc740 \uae00\uaf34(Ctrl B)"});
