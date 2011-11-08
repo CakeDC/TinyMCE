@@ -148,7 +148,7 @@ editor_selector : "mceSimple"
  * @access public
  */
 	public function testEditorWithDefaults() {
-		$this->assertTrue(Configure::write('TinyMce.editorOptions', array('height' => '100px')));
+		$this->assertTrue(Configure::write('TinyMCE.editorOptions', array('height' => '100px')));
 
 		$this->TinyMce->beforeRender();
 		$this->TinyMce->editor(array('theme' => 'advanced'));
