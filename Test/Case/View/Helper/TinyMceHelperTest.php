@@ -16,14 +16,14 @@
  */
 App::uses('Controller', 'Controller');
 App::uses('HtmlHelper', 'View/Helper');
-App::uses('TinyMceHelper', 'TinyMce.View/Helper');
+App::uses('TinyMCEHelper', 'TinyMCE.View/Helper');
 
 /**
  * TheTinyMceTestController class
  *
  * @package       TinyMce.Test.Case.View.Helper
  */
-class TheTinyMceTestController extends Controller {
+class TheTinyMCETestController extends Controller {
 
 /**
  * name property
@@ -41,28 +41,28 @@ class TheTinyMceTestController extends Controller {
 }
 
 /**
- * TheTinyMceTestView class
+ * TheTinyMCETestView class
  *
- * @package       TinyMce.Test.Case.View.Helper
+ * @package       TinyMCE.Test.Case.View.Helper
  */
-class TheTinyMceTestView extends View {
+class TheTinyMCETestView extends View {
 	public $_scripts = array();
 }
 
 /**
- * TinyMceHelperTest class
+ * TinyMCEHelperTest class
  *
- * @package       TinyMce.Test.Case.View.Helper
+ * @package       TinyMCE.Test.Case.View.Helper
  */
-class TinyMceTest extends CakeTestCase {
+class TinyMCETest extends CakeTestCase {
 
 /**
  * Helper being tested
  *
- * @var object TinyMceHelper
+ * @var object TinyMCEHelper
  * @access public
  */
-	public $TinyMce = null;
+	public $TinyMCE = null;
 
 /**
  * @var array
@@ -90,11 +90,11 @@ class TinyMceTest extends CakeTestCase {
 	public function startTest() {
 		Configure::write('Asset.timestamp', false);
 
-		$this->View = new TheTinyMceTestView(null);
-		$this->TinyMce = new TinyMceHelper($this->View);
-		$this->TinyMce->Html = new HtmlHelper($this->View);
-		$this->TinyMce->Html->request = new CakeRequest(null, false);
-		$this->TinyMce->Html->request->webroot = '';
+		$this->View = new TheTinyMCETestView(null);
+		$this->TinyMCE = new TinyMCEHelper($this->View);
+		$this->TinyMCE->Html = new HtmlHelper($this->View);
+		$this->TinyMCE->Html->request = new CakeRequest(null, false);
+		$this->TinyMCE->Html->request->webroot = '';
 	}
 
 /**
@@ -104,7 +104,7 @@ class TinyMceTest extends CakeTestCase {
  * @access public
  */
 	public function endTest() {
-		unset($this->TinyMce, $this->View);
+		unset($this->TinyMCE, $this->View);
 	}
 
 /**
@@ -114,7 +114,7 @@ class TinyMceTest extends CakeTestCase {
  * @access public
  */
 	public function testEditor() {
-		$this->TinyMce->editor(array('theme' => 'advanced'));
+		$this->TinyMCE->editor(array('theme' => 'advanced'));
 		$this->assertEqual($this->View->_scripts[0], '<script type="text/javascript">
 //<![CDATA[
 tinymce.init({
@@ -124,8 +124,8 @@ theme : "advanced"
 //]]>
 </script>');
 
-		$this->TinyMce->configs = $this->configs;
-		$this->TinyMce->editor('simple');
+		$this->TinyMCE->configs = $this->configs;
+		$this->TinyMCE->editor('simple');
 		$this->assertEqual($this->View->_scripts[1], '<script type="text/javascript">
 //<![CDATA[
 tinymce.init({
@@ -138,7 +138,7 @@ editor_selector : "mceSimple"
 </script>');
 
 		$this->expectException('OutOfBoundsException');
-		$this->TinyMce->editor('invalid-config');
+		$this->TinyMCE->editor('invalid-config');
 	}
 
 /**
@@ -150,8 +150,8 @@ editor_selector : "mceSimple"
 	public function testEditorWithDefaults() {
 		$this->assertTrue(Configure::write('TinyMCE.editorOptions', array('height' => '100px')));
 
-		$this->TinyMce->beforeRender();
-		$this->TinyMce->editor(array('theme' => 'advanced'));
+		$this->TinyMCE->beforeRender();
+		$this->TinyMCE->editor(array('theme' => 'advanced'));
 		$this->assertEqual($this->View->_scripts[1], '<script type="text/javascript">
 //<![CDATA[
 tinymce.init({
@@ -162,7 +162,7 @@ theme : "advanced"
 //]]>
 </script>');
 
-		$this->TinyMce->editor(array('height' => '50px'));
+		$this->TinyMCE->editor(array('height' => '50px'));
 		$this->assertEqual($this->View->_scripts[2], '<script type="text/javascript">
 //<![CDATA[
 tinymce.init({
@@ -180,9 +180,9 @@ height : "50px"
  * @access public
  */
 	public function testBeforeRender() {
-		$this->TinyMce->beforeRender();
+		$this->TinyMCE->beforeRender();
 		$this->assertTrue(isset($this->View->_scripts[0]));
-		$this->assertEqual($this->View->_scripts[0], '<script type="text/javascript" src="/tiny_mce/js/tiny_mce/tiny_mce.js"></script>');
+		$this->assertEqual($this->View->_scripts[0], '<script type="text/javascript" src="/TinyMCE/js/tiny_mce/tiny_mce.js"></script>');
 	}
 
 }
