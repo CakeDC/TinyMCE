@@ -28,9 +28,9 @@ Wherever you want to use it, load it in the controller
 
 In the view simply use the editor() method and pass config key/value pairs in an array.
 
-	$this->TinyMCE->editor(array('theme' => 'advanced'));
+	$this->TinyMCE->editor(array('theme' => 'advanced', 'mode' => 'textareas'));
 
-You can find a list of possible configuration keys for TinyMCE here [http://www.tinymce.com/wiki.php/Configuration](http://www.tinymce.com/wiki.php/Configuration) for a list of keys.
+This will instruct TinyMCE to convert all `textarea` elements on the page to TinyMCE editors. If you require some more precise control, or want to change this behavior, checkout the [TinyMCE configuration options](http://www.tinymce.com/wiki.php/Configuration) on the TinyMCE website.
 
 ## Advanced usage of the helper ##
 
@@ -52,10 +52,12 @@ Here is a basic example of configuration data:
 			'editor_selector' => 'mceAdvanced'
 		)
 	);
+	
+	$this->TinyMCE->configs = $configs;
 
 When you loaded the configuration into the property you can simply use it by calling the editor() method of the helper with a string that is equal to the key of the configuration in the array:
 
-	$this->TinyMCE->editor(array('theme' => 'advanced'));
+	$this->TinyMCE->editor('simple'); // This matches the 'simple' config name we passed in earlier.
 
 ### Application wide default options
 
