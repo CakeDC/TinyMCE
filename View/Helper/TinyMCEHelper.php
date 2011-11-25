@@ -40,6 +40,20 @@ class TinyMCEHelper extends AppHelper {
 	protected $_defaults = array();
 
 /**
+ * Constructor
+ *
+ * @param View $View The View this helper is being attached to.
+ * @param array $settings Configuration settings for the helper.
+ */
+	public function __construct(View $View, $settings = array()) {
+		parent::__construct($View, $settings);
+		$configs = Configure::read('TinyMCE.configs');
+		if (!empty($configs) && is_array($configs)) {
+			$this->configs = $configs;
+		}
+	}
+
+/**
  * Adds a new editor to the script block in the head
  *
  * @see http://www.tinymce.com/wiki.php/Configuration for a list of keys

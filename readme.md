@@ -52,10 +52,18 @@ Here is a basic example of configuration data:
 			'editor_selector' => 'mceAdvanced'
 		)
 	);
-	
+
 	$this->TinyMCE->configs = $configs;
 
-When you loaded the configuration into the property you can simply use it by calling the editor() method of the helper with a string that is equal to the key of the configuration in the array:
+You can also put the configuration in APP/config/bootstap.php or another config file and load it. Inside the config file you have you can write the config as above to the TinyMce configuration:
+
+	Configure::write('TinyMCE.configs', array(
+		'simple' => ...,
+		'advanced' => ...));
+
+The different sets of configuration data will be auto loaded by the helper inside its constructor. It is suggested that you use this way of passing different configs to the helper because by this you'll be able to store all of them in one place.
+
+When you passed the configuration to the helper you can simply use it by calling the editor() method of the helper with a string that is equal to the key of the configuration in the array:
 
 	$this->TinyMCE->editor('simple'); // This matches the 'simple' config name we passed in earlier.
 
