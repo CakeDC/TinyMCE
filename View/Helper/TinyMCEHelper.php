@@ -65,7 +65,7 @@ class TinyMCEHelper extends AppHelper {
 			if (isset($this->configs[$options])) {
 				$options = $this->configs[$options];
 			} else {
-				throw new OutOfBoundsException(sprintf(__('Invalid TinyMCE configuration preset %s', true), $options));
+				throw new OutOfBoundsException(sprintf(__('Invalid TinyMCE configuration preset %s'), $options));
 			}
 		}
 		$options = array_merge($this->_defaults, $options);
