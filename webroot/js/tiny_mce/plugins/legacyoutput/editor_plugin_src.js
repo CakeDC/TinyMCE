@@ -26,7 +26,7 @@
 			editor.onInit.add(function() {
 				var alignElements = 'p,h1,h2,h3,h4,h5,h6,td,th,div,ul,ol,li,table,img',
 					fontSizes = tinymce.explode(editor.settings.font_size_style_values),
-					schema = editor.schema;
+					serializer = editor.serializer;
 
 				// Override some internal formats to produce legacy elements and attributes
 				editor.formatter.register({
@@ -34,27 +34,13 @@
 					alignleft : {selector : alignElements, attributes : {align : 'left'}},
 					aligncenter : {selector : alignElements, attributes : {align : 'center'}},
 					alignright : {selector : alignElements, attributes : {align : 'right'}},
-					alignfull : {selector : alignElements, attributes : {align : 'justify'}},
+					alignfull : {selector : alignElements, attributes : {align : 'full'}},
 
 					// Change the basic formatting elements to use deprecated element types
-					bold : [
-						{inline : 'b', remove : 'all'},
-						{inline : 'strong', remove : 'all'},
-						{inline : 'span', styles : {fontWeight : 'bold'}}
-					],
-					italic : [
-						{inline : 'i', remove : 'all'},
-						{inline : 'em', remove : 'all'},
-						{inline : 'span', styles : {fontStyle : 'italic'}}
-					],
-					underline : [
-						{inline : 'u', remove : 'all'},
-						{inline : 'span', styles : {textDecoration : 'underline'}, exact : true}
-					],
-					strikethrough : [
-						{inline : 'strike', remove : 'all'},
-						{inline : 'span', styles : {textDecoration: 'line-through'}, exact : true}
-					],
+					bold : {inline : 'b'},
+					italic : {inline : 'i'},
+					underline : {inline : 'u'},
+					strikethrough : {inline : 'strike'},
 
 					// Change font size and font family to use the deprecated font element
 					fontname : {inline : 'font', attributes : {face : '%value'}},
@@ -72,24 +58,35 @@
 					hilitecolor : {inline : 'font', styles : {backgroundColor : '%value'}}
 				});
 
+				// Force parsing of the serializer rules
+				serializer._setup();
+
 				// Check that deprecated elements are allowed if not add them
 				tinymce.each('b,i,u,strike'.split(','), function(name) {
-					schema.addValidElements(name + '[*]');
+					var rule = serializer.rules[name];
+
+					if (!rule)
+						serializer.addRules(name);
 				});
 
 				// Add font element if it's missing
-				if (!schema.getElementRule("font"))
-					schema.addValidElements("font[face|size|color|style]");
+				if (!serializer.rules["font"])
+					serializer.addRules("font[face|size|color|style]");
 
 				// Add the missing and depreacted align attribute for the serialization engine
 				tinymce.each(alignElements.split(','), function(name) {
-					var rule = schema.getElementRule(name), found;
+					var rule = serializer.rules[name], found;
 
 					if (rule) {
-						if (!rule.attributes.align) {
-							rule.attributes.align = {};
-							rule.attributesOrder.push('align');
-						}
+						tinymce.each(rule.attribs, function(name, attr) {
+							if (attr.name == 'align') {
+								found = true;
+								return false;
+							}
+						});
+
+						if (!found)
+							rule.attribs.push({name : 'align'});
 					}
 				});
 

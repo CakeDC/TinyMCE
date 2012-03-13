@@ -19,7 +19,6 @@
 			var t = this, states = ['Bold', 'Italic', 'Underline', 'Strikethrough', 'InsertUnorderedList', 'InsertOrderedList'], s = ed.settings;
 
 			t.editor = ed;
-			ed.contentCSS.push(url + "/skins/" + s.skin + "/content.css");
 
 			ed.onInit.add(function() {
 				ed.onNodeChange.add(function(ed, cm) {
@@ -27,6 +26,8 @@
 						cm.get(c.toLowerCase()).setActive(ed.queryCommandState(c));
 					});
 				});
+
+				ed.dom.loadCSS(url + "/skins/" + s.skin + "/content.css");
 			});
 
 			DOM.loadCSS((s.editor_css ? ed.documentBaseURI.toAbsolute(s.editor_css) : '') || url + "/skins/" + s.skin + "/ui.css");
