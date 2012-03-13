@@ -76,9 +76,6 @@ var SearchReplaceDialog = {
 				ed.selection.collapse(true);
 
 				if (tinymce.isIE) {
-					ed.focus();
-					r = ed.getDoc().selection.createRange();
-
 					while (r.findText(s, b ? -1 : 1, fl)) {
 						r.scrollIntoView();
 						r.select();
@@ -115,14 +112,15 @@ var SearchReplaceDialog = {
 		se.collapse(b);
 		r = se.getRng();
 
+		if (tinymce.isIE) {
+			r = ed.getDoc().selection.createRange();
+		}
+
 		// Whats the point
 		if (!s)
 			return;
 
 		if (tinymce.isIE) {
-			ed.focus();
-			r = ed.getDoc().selection.createRange();
-
 			if (r.findText(s, b ? -1 : 1, fl)) {
 				r.scrollIntoView();
 				r.select();

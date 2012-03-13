@@ -17,7 +17,7 @@
 
 			// Register commands
 			ed.addCommand('mceNonBreaking', function() {
-				ed.execCommand('mceInsertContent', false, (ed.plugins.visualchars && ed.plugins.visualchars.state) ? '<span data-mce-bogus="1" class="mceItemHidden mceItemNbsp">&nbsp;</span>' : '&nbsp;');
+				ed.execCommand('mceInsertContent', false, (ed.plugins.visualchars && ed.plugins.visualchars.state) ? '<span _mce_bogus="1" class="mceItemHidden mceItemNbsp">&nbsp;</span>' : '&nbsp;');
 			});
 
 			// Register buttons
@@ -25,12 +25,11 @@
 
 			if (ed.getParam('nonbreaking_force_tab')) {
 				ed.onKeyDown.add(function(ed, e) {
-					if (e.keyCode == 9) {
-						e.preventDefault();
-	
+					if (tinymce.isIE && e.keyCode == 9) {
 						ed.execCommand('mceNonBreaking');
 						ed.execCommand('mceNonBreaking');
 						ed.execCommand('mceNonBreaking');
+						tinymce.dom.Event.cancel(e);
 					}
 				});
 			}
