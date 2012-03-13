@@ -41,6 +41,7 @@
 			image : ['image_desc', 'mceImage'],
 			cleanup : ['cleanup_desc', 'mceCleanup'],
 			help : ['help_desc', 'mceHelp'],
+			shortcuts : ['shortcuts_desc', 'mceShortcuts'],
 			code : ['code_desc', 'mceCodeEditor'],
 			hr : ['hr_desc', 'InsertHorizontalRule'],
 			removeformat : ['removeformat_desc', 'RemoveFormat'],
@@ -68,7 +69,7 @@
 
 			ed.forcedHighContrastMode = ed.settings.detect_highcontrast && t._isHighContrast();
 			ed.settings.skin = ed.forcedHighContrastMode ? 'highcontrast' : ed.settings.skin;
-
+			
 			// Default settings
 			t.settings = s = extend({
 				theme_advanced_path : true,
@@ -124,9 +125,6 @@
 			if (s.theme_advanced_statusbar_location == 'none')
 				s.theme_advanced_statusbar_location = 0;
 
-			if (ed.settings.content_css !== false)
-				ed.contentCSS.push(ed.baseURI.toAbsolute(url + "/skins/" + ed.settings.skin + "/content.css"));
-
 			// Init editor
 			ed.onInit.add(function() {
 				if (!ed.settings.readonly) {
@@ -137,6 +135,9 @@
 						t._updateUndoStatus(ed);
 					});
 				}
+
+				if (ed.settings.content_css !== false)
+					ed.dom.loadCSS(ed.baseURI.toAbsolute(url + "/skins/" + ed.settings.skin + "/content.css"));
 			});
 
 			ed.onSetProgressState.add(function(ed, b, ti) {
@@ -163,7 +164,7 @@
 			if (s.skin_variant)
 				DOM.loadCSS(url + "/skins/" + ed.settings.skin + "/ui_" + s.skin_variant + ".css");
 		},
-
+		
 		_isHighContrast : function() {
 			var actualColor, div = DOM.add(DOM.getRoot(), 'div', {'style': 'background-color: rgb(171,239,86);'});
 
@@ -250,10 +251,9 @@
 
 					// Toggle off the current format
 					matches = ed.formatter.matchAll(formatNames);
-					if (!name || matches[0] == name) {
-						if (matches[0]) 
-							ed.formatter.remove(matches[0]);
-					} else
+					if (!name || matches[0] == name)
+						ed.formatter.remove(matches[0]);
+					else
 						ed.formatter.apply(name);
 
 					ed.undoManager.add();
@@ -335,10 +335,6 @@
 						return v == sv;
 					});
 
-					if (cur && cur.value == v) {
-						c.select(null);
-					}
-
 					return false; // No auto select
 				}
 			});
@@ -386,10 +382,6 @@
 					return v == sv;
 				});
 
-				if (cur && (cur.value.fontSize == v.fontSize || cur.value['class'] == v['class'])) {
-					c.select(null);
-				}
-
 				return false; // No auto select
 			}});
 
@@ -426,11 +418,7 @@
 				samp : 'advanced.samp'
 			}, t = this;
 
-			c = t.editor.controlManager.createListBox('formatselect', {title : 'advanced.block', onselect : function(v) {
-				t.editor.execCommand('FormatBlock', false, v);
-				return false;
-			}});
-
+			c = t.editor.controlManager.createListBox('formatselect', {title : 'advanced.block', cmd : 'FormatBlock'});
 			if (c) {
 				each(t.editor.getParam('theme_advanced_blockformats', t.settings.theme_advanced_blockformats, 'hash'), function(v, k) {
 					c.add(t.editor.translate(k != v ? k : fmts[v]), v, {'class' : 'mce_formatPreview mce_' + v});
@@ -504,12 +492,10 @@
 			if (ed.settings) {
 				ed.settings.aria_label = s.aria_label + ed.getLang('advanced.help_shortcut');
 			}
-
 			// TODO: ACC Should have an aria-describedby attribute which is user-configurable to describe what this field is actually for.
 			// Maybe actually inherit it from the original textara?
 			n = p = DOM.create('span', {role : 'application', 'aria-labelledby' : ed.id + '_voice', id : ed.id + '_parent', 'class' : 'mceEditor ' + ed.settings.skin + 'Skin' + (s.skin_variant ? ' ' + ed.settings.skin + 'Skin' + t._ufirst(s.skin_variant) : '')});
 			DOM.add(n, 'span', {'class': 'mceVoiceLabel', 'style': 'display:none;', id: ed.id + '_voice'}, s.aria_label);
-
 			if (!DOM.boxModel)
 				n = DOM.add(n, 'div', {'class' : 'mceOldBoxModel'});
 
@@ -532,7 +518,7 @@
 			n = o.targetNode;
 
 			// Add classes to first and last TRs
-			nl = sc.rows;
+			nl = DOM.stdMode ? sc.getElementsByTagName('tr') : sc.rows; // Quick fix for IE 8
 			DOM.addClass(nl[0], 'mceFirst');
 			DOM.addClass(nl[nl.length - 1], 'mceLast');
 
@@ -579,25 +565,16 @@
 			}
 */
 
-			if (!ed.getParam('accessibility_focus'))
-				Event.add(DOM.add(p, 'a', {href : '#'}, '<!-- IE -->'), 'focus', function() {tinyMCE.get(ed.id).focus();});
-
 			if (s.theme_advanced_toolbar_location == 'external')
 				o.deltaHeight = 0;
 
 			t.deltaHeight = o.deltaHeight;
 			o.targetNode = null;
-
+			
 			ed.onKeyDown.add(function(ed, evt) {
 				var DOM_VK_F10 = 121, DOM_VK_F11 = 122;
-
 				if (evt.altKey) {
-		 			if (evt.keyCode === DOM_VK_F10) {
-						// Make sure focus is given to toolbar in Safari.
-						// We can't do this in IE as it prevents giving focus to toolbar when editor is in a frame
-						if (tinymce.isWebKit) {
-							window.focus();
-						}
+					if (evt.keyCode === DOM_VK_F10) {
 						t.toolbarGroup.focus();
 						return Event.cancel(evt);
 					} else if (evt.keyCode === DOM_VK_F11) {
@@ -606,7 +583,7 @@
 					}
 				}
 			});
-
+			
 			// alt+0 is the UK recommended shortcut for accessing the list of access controls.
 			ed.addShortcut('alt+0', '', 'mceShortcuts', t);
 
@@ -628,7 +605,7 @@
 		},
 
 		resizeBy : function(dw, dh) {
-			var e = DOM.get(this.editor.id + '_ifr');
+			var e = DOM.get(this.editor.id + '_tbl');
 
 			this.resizeTo(e.clientWidth + dw, e.clientHeight + dh);
 		},
@@ -757,7 +734,7 @@
 			each(explode(s.theme_advanced_containers || ''), function(c, i) {
 				var v = s['theme_advanced_container_' + c] || '';
 
-				switch (c.toLowerCase()) {
+				switch (v.toLowerCase()) {
 					case 'mceeditor':
 						n = DOM.add(tb, 'tr');
 						n = ic = DOM.add(n, 'td', {'class' : 'mceIframeContainer'});
@@ -825,19 +802,18 @@
 		},
 
 		_addToolbars : function(c, o) {
-			var t = this, i, tb, ed = t.editor, s = t.settings, v, cf = ed.controlManager, di, n, h = [], a, toolbarGroup;
+			var t = this, i, tb, ed = t.editor, s = t.settings, v, cf = ed.controlManager, di, n, a, toolbarGroup;
 
 			toolbarGroup = cf.createToolbarGroup('toolbargroup', {
 				'name': ed.getLang('advanced.toolbar'),
 				'tab_focus_toolbar':ed.getParam('theme_advanced_tab_focus_toolbar')
 			});
-
 			t.toolbarGroup = toolbarGroup;
-
+			
 			a = s.theme_advanced_toolbar_align.toLowerCase();
 			a = 'mce' + t._ufirst(a);
-
-			n = DOM.add(DOM.add(c, 'tr', {role: 'presentation'}), 'td', {'class' : 'mceToolbar ' + a, "role":"presentation"});
+      
+			n = DOM.add(DOM.add(c, 'tr'), 'td', {'class' : 'mceToolbar ' + a});
 
 			// Create toolbar and add the controls
 			for (i=1; (v = s['theme_advanced_buttons' + i]); i++) {
@@ -854,16 +830,15 @@
 
 				o.deltaHeight -= s.theme_advanced_row_height;
 			}
-			h.push(toolbarGroup.renderHTML());
-			h.push(DOM.createHTML('a', {href : '#', accesskey : 'z', title : ed.getLang("advanced.toolbar_focus"), onfocus : 'tinyMCE.getInstanceById(\'' + ed.id + '\').focus();'}, '<!-- IE -->'));
-			DOM.setHTML(n, h.join(''));
+
+			DOM.setHTML(n, toolbarGroup.renderHTML());
 		},
 
 		_addStatusBar : function(tb, o) {
 			var n, t = this, ed = t.editor, s = t.settings, r, mf, me, td;
 
 			n = DOM.add(tb, 'tr');
-			n = td = DOM.add(n, 'td', {'class' : 'mceStatusbar'}); 
+			n = td = DOM.add(n, 'td', {'class' : 'mceStatusbar'});
 			n = DOM.add(n, 'div', {id : ed.id + '_path_row', 'role': 'group', 'aria-labelledby': ed.id + '_path_voice'});
 			if (s.theme_advanced_path) {
 				DOM.add(n, 'span', {id: ed.id + '_path_voice'}, ed.translate('advanced.path'));
@@ -871,10 +846,9 @@
 			} else {
 				DOM.add(n, 'span', {}, '&#160;');
 			}
-			
 
 			if (s.theme_advanced_resizing) {
-				DOM.add(td, 'a', {id : ed.id + '_resize', href : 'javascript:;', onclick : "return false;", 'class' : 'mceResize', tabIndex:"-1"});
+				DOM.add(td, 'a', {id : ed.id + '_resize', href : 'javascript:;', onclick : "return false;", 'class' : 'mceResize'});
 
 				if (s.theme_advanced_resizing_use_cookie) {
 					ed.onPostRender.add(function() {
@@ -939,12 +913,11 @@
 			o.deltaHeight -= 21;
 			n = tb = null;
 		},
-
+		
 		_updateUndoStatus : function(ed) {
-			var cm = ed.controlManager, um = ed.undoManager;
-
-			cm.setDisabled('undo', !um.hasUndo() && !um.typing);
-			cm.setDisabled('redo', !um.hasRedo());
+			var cm = ed.controlManager;
+			cm.setDisabled('undo', !ed.undoManager.hasUndo() && !ed.typing);
+			cm.setDisabled('redo', !ed.undoManager.hasRedo());
 		},
 
 		_nodeChanged : function(ed, cm, n, co, ob) {
@@ -987,12 +960,12 @@
 			}
 
 			if (c = cm.get('anchor')) {
-				c.setActive(!co && !!p && p.name);
+				c.setActive(!!p && p.name);
 			}
 
 			p = getParent('IMG');
 			if (c = cm.get('image'))
-				c.setActive(!co && !!p && n.className.indexOf('mceItem') == -1);
+				c.setActive(!!p && n.className.indexOf('mceItem') == -1);
 
 			if (c = cm.get('styleselect')) {
 				t._importClasses();
@@ -1072,37 +1045,27 @@
 				updateColor('backcolor', bc);
 			}
 
-			if (s.theme_advanced_show_current_color) {
-				function updateColor(controlId, color) {
-					if (c = cm.get(controlId)) {
-						if (!color)
-							color = c.settings.default_color;
-						if (color !== c.value) {
-							c.displayColor(color);
-						}
-					}
-				};
-
-				updateColor('forecolor', fc);
-				updateColor('backcolor', bc);
-			}
-
 			if (s.theme_advanced_path && s.theme_advanced_statusbar_location) {
 				p = DOM.get(ed.id + '_path') || DOM.add(ed.id + '_path_row', 'span', {id : ed.id + '_path'});
-
 				if (t.statusKeyboardNavigation) {
-					t.statusKeyboardNavigation.destroy();
-					t.statusKeyboardNavigation = null;
+						t.statusKeyboardNavigation.destroy();
+						t.statusKeyboardNavigation = null;
 				}
-
 				DOM.setHTML(p, '');
 
 				getParent(function(n) {
 					var na = n.nodeName.toLowerCase(), u, pi, ti = '';
 
-					// Ignore non element and bogus/hidden elements
-					if (n.nodeType != 1 || na === 'br' || n.getAttribute('data-mce-bogus') || DOM.hasClass(n, 'mceItemHidden') || DOM.hasClass(n, 'mceItemRemoved'))
+					/*if (n.getAttribute('_mce_bogus'))
 						return;
+*/
+					// Ignore non element and hidden elements
+					if (n.nodeType != 1 || n.nodeName === 'BR' || (DOM.hasClass(n, 'mceItemHidden') || DOM.hasClass(n, 'mceItemRemoved')))
+						return;
+
+					// Fake name
+					if (v = DOM.getAttrib(n, 'mce_name'))
+						na = v;
 
 					// Handle prefix
 					if (tinymce.isIE && n.scopeName !== 'HTML')
@@ -1181,10 +1144,11 @@
 					pi = DOM.create('a', {'href' : "javascript:;", role: 'button', onmousedown : "return false;", title : ti, 'class' : 'mcePath_' + (de++)}, na);
 
 					if (p.hasChildNodes()) {
-						p.insertBefore(DOM.create('span', {'aria-hidden': 'true'}, '\u00a0\u00bb '), p.firstChild);
+						p.insertBefore(DOM.create('span', { 'aria-hidden': 'true' }, ' \u00bb '), p.firstChild);
 						p.insertBefore(pi, p.firstChild);
 					} else
 						p.appendChild(pi);
+					
 				}, ed.getBody());
 
 				if (DOM.select('a', p).length > 0) {
@@ -1225,7 +1189,7 @@
 			ed.windowManager.open({
 				url : this.url + '/charmap.htm',
 				width : 550 + parseInt(ed.getLang('advanced.charmap_delta_width', 0)),
-				height : 260 + parseInt(ed.getLang('advanced.charmap_delta_height', 0)),
+				height : 250 + parseInt(ed.getLang('advanced.charmap_delta_height', 0)),
 				inline : true
 			}, {
 				theme_url : this.url
@@ -1244,7 +1208,7 @@
 				theme_url : this.url
 			});
 		},
-
+		
 		_mceShortcuts : function() {
 			var ed = this.editor;
 			ed.windowManager.open({
