@@ -75,6 +75,6 @@ class TinyMceHelper extends AppHelper {
 		if ($appOptions !== false && is_array($appOptions)) {
 			$this->_defaults = $appOptions;
 		}
-		$this->Html->script('/tiny_mce/js/tiny_mce/tiny_mce.js', false);
+		$this->Html->script('/js/tiny_mce/tiny_mce.js', false);
 	}
 }
