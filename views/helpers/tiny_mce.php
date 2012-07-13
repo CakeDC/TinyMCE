@@ -55,15 +55,13 @@ class TinyMceHelper extends AppHelper {
 			}
 		}
 		$options = array_merge($this->_defaults, $options);
-		$lines = '';
+		$config = array();
 		
 		foreach ($options as $option => $value) {
-			$lines .= Inflector::underscore($option) . ' : "' . $value . '",' . "\n";
+			$config[Inflector::underscore($option)] = $value;
 		}
-		// remove last comma from lines to avoid the editor breaking in Internet Explorer
-		$lines = rtrim($lines);
-		$lines = rtrim($lines, ',');
-		$this->Html->scriptBlock('tinyMCE.init({' . "\n" . $lines . "\n" . '});' . "\n", array(
+        
+		$this->Html->scriptBlock('tinyMCE.init(' . json_encode($config) . ');' . "\n", array(
 			'inline' => false));
 	}
 
@@ -77,6 +75,6 @@ class TinyMceHelper extends AppHelper {
 		if ($appOptions !== false && is_array($appOptions)) {
 			$this->_defaults = $appOptions;
 		}
-		$this->Html->script('/tiny_mce/js/tiny_mce/tiny_mce.js', false);
+		$this->Html->script('/js/tiny_mce/tiny_mce.js', false);
 	}
 }
