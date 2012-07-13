@@ -16,7 +16,7 @@
  * @subpackage tiny_m_c_e.views.helpers
  */
 
-class TinymceHelper extends AppHelper {
+class TinyMceHelper extends AppHelper {
 
 /**
  * Other helpers used by FormHelper
@@ -71,6 +71,10 @@ class TinymceHelper extends AppHelper {
  * @return void
  */
 	public function beforeRender() {
+		$appOptions = Configure::read('TinyMCE.editorOptions');
+		if ($appOptions !== false && is_array($appOptions)) {
+			$this->_defaults = $appOptions;
+		}
 		$this->Html->script('/tiny_mce/js/tiny_mce/tiny_mce.js', false);
 	}
 }
