@@ -1,5 +1,7 @@
 # TinyMCE Plugin for CakePHP #
 
+for cake 2.x
+
 The purpose of placing TinyMCE in a plugin is to keep it separate from a themed view, the regular webroot or the app in general, which makes it easier to update and overall follows the idea of keeping the code clean and modular.
 
 To use TinyMCE you need to clone git repository:
@@ -89,6 +91,19 @@ You can always check the tests to see how to use the helper.
 For support and feature request, please visit the [TinyMCE Plugin Support Site](https://github.com/CakeDC/TinyMCE).
 
 For more information about our Professional CakePHP Services please visit the [Cake Development Corporation website](http://cakedc.com).
+
+## Branch strategy ##
+
+The master branch holds the STABLE latest version of the plugin. 
+Develop branch is UNSTABLE and used to test new features before releasing them. 
+
+Previous maintenance versions are named after the CakePHP compatible version, for example, branch 1.3 is the maintenance version compatible with CakePHP 1.3.
+All versions are updated with security patches.
+
+## Contributing to this Plugin ##
+
+Please feel free to contribute to the plugin with new issues, requests, unit tests and code fixes or new features. If you want to contribute some code, create a feature branch from develop, and send us your pull request. Unit tests for new features and issues detected are mandatory to keep quality high. 
+
 
 ## License ##
 
