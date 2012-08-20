@@ -1,6 +1,6 @@
 # TinyMCE Plugin for CakePHP #
 
-for cake 2.x
+For cake 2.x
 
 The purpose of placing TinyMCE in a plugin is to keep it separate from a themed view, the regular webroot or the app in general, which makes it easier to update and overall follows the idea of keeping the code clean and modular.
 
@@ -23,6 +23,10 @@ There two ways you can use this plugin, simply use the helper or load the editor
 and placing your own script in the head of the page. Please note that the helper will auto add the TinyMCE editor script to the header of the page. No need to to that by hand if you use the helper.
 
 ## How to use the helper ##
+
+Since CakePHP 2.0 it is necessary to activate the plugin in your application. To do so,
+edit `app/Config/bootstrap.php` and add the line `CakePlugin::load('TinyMCE');` at the 
+bottom. If you already have `CakePlugin::loadAll();` to auto-load all plugins then you may skip this step.
 
 Wherever you want to use it, load it in the controller
 
@@ -85,6 +89,33 @@ You can always check the tests to see how to use the helper.
 
 * PHP version: PHP 5.2+
 * CakePHP version: CakePHP 2.0+
+* jQuery javascript library <http://jquery.com/>
+
+## Special Dependency Note ##
+
+This plugin depends on jQuery (<http://jquery.com>) so you would need to ensure that it is loaded in your layout or the
+view in which you want to display your editor. An example of how to load jQuery in your layout is shown below:
+	<?php
+		...
+		
+		echo $this->Html->script(array('https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js'));
+
+		...
+
+		echo $this->fetch('script');
+	?>
+
+Of course, you may also use a copy of the jQuery library from your app/webroot/js folder like this:
+
+	<?php
+		...
+		
+		echo $this->Html->script(array('jquery.min'));
+
+		...
+
+		echo $this->fetch('script');
+	?>
 
 ## Support ##
 
