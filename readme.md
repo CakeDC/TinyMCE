@@ -18,7 +18,7 @@ The TinyMCE helper is basically just a convenience helper that allows you to use
 
 There two ways you can use this plugin, simply use the helper or load the editor "by hand" using 
 
-	$this->Html->script('/TinyMCE/js/tiny_mce/tiny_mce.js', array('inline' => false);
+	$this->Html->script('/tiny_m_c_e/js/tiny_mce/tiny_mce.js', array('inline' => false));
 
 and placing your own script in the head of the page. Please note that the helper will auto add the TinyMCE editor script to the header of the page. No need to to that by hand if you use the helper.
 
