@@ -85,7 +85,7 @@ class TinyMCEHelper extends AppHelper {
  *
  * @return void
  */
-	public function beforeRender() {
+	public function beforeRender($viewFile) {
 		$appOptions = Configure::read('TinyMCE.editorOptions');
 		if ($appOptions !== false && is_array($appOptions)) {
 			$this->_defaults = $appOptions;
