@@ -72,7 +72,17 @@ class TinyMCEHelper extends AppHelper {
 		$lines = '';
 
 		foreach ($options as $option => $value) {
-			$lines .= Inflector::underscore($option) . ' : "' . $value . '",' . "\n";
+		
+			$concatAf = ' : "';
+			$concatBf = '",';
+			
+			if(!is_string($value)){
+				$concatAf = ' : ';
+				$concatBf = ',';
+				$value = (!is_int($value))?var_export($value, true):$value;
+			}
+                    
+			$lines .= Inflector::underscore($option) . $concatAf . $value . $concatBf . "\n";
 		}
 		// remove last comma from lines to avoid the editor breaking in Internet Explorer
 		$lines = rtrim($lines);
