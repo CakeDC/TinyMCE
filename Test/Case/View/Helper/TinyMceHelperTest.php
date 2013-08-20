@@ -87,7 +87,8 @@ class TinyMCETest extends CakeTestCase {
  * @return void
  * @access public
  */
-	public function startTest() {
+	public function setUp() {
+		parent::setUp();
 		Configure::write('Asset.timestamp', false);
 
 		$this->View = new TheTinyMCETestView(null);
@@ -103,7 +104,8 @@ class TinyMCETest extends CakeTestCase {
  * @return void
  * @access public
  */
-	public function endTest() {
+	public function tearDown() {
+		parent::tearDown();
 		unset($this->TinyMCE, $this->View);
 	}
 
@@ -114,28 +116,37 @@ class TinyMCETest extends CakeTestCase {
  * @access public
  */
 	public function testEditor() {
-		$this->TinyMCE->editor(array('theme' => 'advanced'));
-		$this->assertEqual($this->View->_scripts[0], '<script type="text/javascript">
-//<![CDATA[
+		$expects = <<<TEXT
 tinymce.init({
 theme : "advanced"
 });
 
-//]]>
-</script>');
+TEXT;
+$expects = "tinymce.init({\nheight : \"50px\"\n});\n";
+		$this->TinyMCE->Html = $this->getMock('HtmlHelper', array('scriptBlock'), array($this->View));
+		$this->TinyMCE->Html->expects($this->at(0))
+			->method('scriptBlock')
+			->with($expects , array('inline' => false));
+
+		$this->TinyMCE->editor(array('theme' => 'advanced'));
+
+		$this->TinyMCE->Html = $this->getMock('HtmlHelper', array('scriptBlock'), array($this->View));
+		$this->TinyMCE->Html->expects($this->at(2))
+			->method('scriptBlock')
+			->with('<script type="text/javascript">
+			//<![CDATA[
+			tinymce.init({
+			mode : "textareas",
+			theme : "simple",
+			editor_selector : "mceSimple"
+			});
+
+			//]]>
+			</script>', array('inline' => false));
 
 		$this->TinyMCE->configs = $this->configs;
 		$this->TinyMCE->editor('simple');
-		$this->assertEqual($this->View->_scripts[1], '<script type="text/javascript">
-//<![CDATA[
-tinymce.init({
-mode : "textareas",
-theme : "simple",
-editor_selector : "mceSimple"
-});
 
-//]]>
-</script>');
 
 		$this->expectException('OutOfBoundsException');
 		$this->TinyMCE->editor('invalid-config');
@@ -150,27 +161,34 @@ editor_selector : "mceSimple"
 	public function testEditorWithDefaults() {
 		$this->assertTrue(Configure::write('TinyMCE.editorOptions', array('height' => '100px')));
 
-		$this->TinyMCE->beforeRender();
+		$this->TinyMCE->Html = $this->getMock('HtmlHelper', array('script'), array($this->View));
+		$this->TinyMCE->Html->expects($this->at(1))
+			->method('scriptBlock')
+			->with('<script type="text/javascript">
+			//<![CDATA[
+			tinymce.init({
+			height : "100px",
+			theme : "advanced"
+			});
+
+			//]]>
+			</script>', array('inline' => false));
+
+		$this->TinyMCE->beforeRender('view');
 		$this->TinyMCE->editor(array('theme' => 'advanced'));
-		$this->assertEqual($this->View->_scripts[1], '<script type="text/javascript">
-//<![CDATA[
-tinymce.init({
-height : "100px",
-theme : "advanced"
-});
 
-//]]>
-</script>');
+		$this->TinyMCE->Html->expects($this->at(2))
+			->method('scriptBlock')
+			->with('<script type="text/javascript">
+			//<![CDATA[
+			tinymce.init({
+			height : "50px"
+			});
 
+			//]]>
+			</script>', array('inline' => false));
 		$this->TinyMCE->editor(array('height' => '50px'));
-		$this->assertEqual($this->View->_scripts[2], '<script type="text/javascript">
-//<![CDATA[
-tinymce.init({
-height : "50px"
-});
 
-//]]>
-</script>');
 	}
 
 /**
@@ -180,9 +198,11 @@ height : "50px"
  * @access public
  */
 	public function testBeforeRender() {
-		$this->TinyMCE->beforeRender();
-		$this->assertTrue(isset($this->View->_scripts[0]));
-		$this->assertEqual($this->View->_scripts[0], '<script type="text/javascript" src="/TinyMCE/js/tiny_mce/tiny_mce.js"></script>');
+		$this->TinyMCE->Html = $this->getMock('HtmlHelper', array('script'), array($this->View));
+		$this->TinyMCE->Html->expects($this->once())
+			->method('script')
+			->with('/TinyMCE/js/tiny_mce/tiny_mce.js', array('inline' => false));
+		$this->TinyMCE->beforeRender('view');
 	}
 
 }
