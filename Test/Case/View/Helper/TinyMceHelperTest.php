@@ -41,15 +41,6 @@ class TheTinyMCETestController extends Controller {
 }
 
 /**
- * TheTinyMCETestView class
- *
- * @package       TinyMCE.Test.Case.View.Helper
- */
-class TheTinyMCETestView extends View {
-	public $_scripts = array();
-}
-
-/**
  * TinyMCEHelperTest class
  *
  * @package       TinyMCE.Test.Case.View.Helper
@@ -87,14 +78,12 @@ class TinyMCETest extends CakeTestCase {
  * @return void
  * @access public
  */
-	public function startTest() {
+	public function setUp() {
 		Configure::write('Asset.timestamp', false);
 
-		$this->View = new TheTinyMCETestView(null);
+		$this->View = new View(null);
 		$this->TinyMCE = new TinyMCEHelper($this->View);
-		$this->TinyMCE->Html = new HtmlHelper($this->View);
-		$this->TinyMCE->Html->request = new CakeRequest(null, false);
-		$this->TinyMCE->Html->request->webroot = '';
+		$this->TinyMCE->Html = $this->getMock('HtmlHelper', array('script'), array($this->View));
 	}
 
 /**
@@ -103,7 +92,7 @@ class TinyMCETest extends CakeTestCase {
  * @return void
  * @access public
  */
-	public function endTest() {
+	public function tearDown() {
 		unset($this->TinyMCE, $this->View);
 	}
 
@@ -114,28 +103,36 @@ class TinyMCETest extends CakeTestCase {
  * @access public
  */
 	public function testEditor() {
+		$this->TinyMCE->Html->expects($this->any())
+			->method('scriptBlock')
+			->with(
+				'<script type="text/javascript">
+				//<![CDATA[
+				tinymce.init({
+				theme : "advanced"
+				});
+
+				//]]>
+				</script>',
+				array('inline' => false));
 		$this->TinyMCE->editor(array('theme' => 'advanced'));
-		$this->assertEqual($this->View->_scripts[0], '<script type="text/javascript">
-//<![CDATA[
-tinymce.init({
-theme : "advanced"
-});
 
-//]]>
-</script>');
+		$this->TinyMCE->Html->expects($this->any())
+			->method('scriptBlock')
+			->with(
+				'<script type="text/javascript">
+				//<![CDATA[
+				tinymce.init({
+				mode : "textareas",
+				theme : "simple",
+				editor_selector : "mceSimple"
+				});
 
+				//]]>
+				</script>',
+				array('inline' => false));
 		$this->TinyMCE->configs = $this->configs;
 		$this->TinyMCE->editor('simple');
-		$this->assertEqual($this->View->_scripts[1], '<script type="text/javascript">
-//<![CDATA[
-tinymce.init({
-mode : "textareas",
-theme : "simple",
-editor_selector : "mceSimple"
-});
-
-//]]>
-</script>');
 
 		$this->expectException('OutOfBoundsException');
 		$this->TinyMCE->editor('invalid-config');
@@ -150,27 +147,35 @@ editor_selector : "mceSimple"
 	public function testEditorWithDefaults() {
 		$this->assertTrue(Configure::write('TinyMCE.editorOptions', array('height' => '100px')));
 
-		$this->TinyMCE->beforeRender();
+		$this->TinyMCE->Html->expects($this->any())
+			->method('scriptBlock')
+			->with(
+				'<script type="text/javascript">
+				//<![CDATA[
+				tinymce.init({
+				height : "100px",
+				theme : "advanced"
+				});
+
+				//]]>
+				</script>',
+				array('inline' => false));
+		$this->TinyMCE->beforeRender('test.ctp');
 		$this->TinyMCE->editor(array('theme' => 'advanced'));
-		$this->assertEqual($this->View->_scripts[1], '<script type="text/javascript">
-//<![CDATA[
-tinymce.init({
-height : "100px",
-theme : "advanced"
-});
 
-//]]>
-</script>');
+		$this->TinyMCE->Html->expects($this->any())
+			->method('scriptBlock')
+			->with(
+				'<script type="text/javascript">
+				//<![CDATA[
+				tinymce.init({
+				height : "50px"
+				});
 
+				//]]>
+				</script>',
+				array('inline' => false));
 		$this->TinyMCE->editor(array('height' => '50px'));
-		$this->assertEqual($this->View->_scripts[2], '<script type="text/javascript">
-//<![CDATA[
-tinymce.init({
-height : "50px"
-});
-
-//]]>
-</script>');
 	}
 
 /**
@@ -180,9 +185,12 @@ height : "50px"
  * @access public
  */
 	public function testBeforeRender() {
-		$this->TinyMCE->beforeRender();
-		$this->assertTrue(isset($this->View->_scripts[0]));
-		$this->assertEqual($this->View->_scripts[0], '<script type="text/javascript" src="/TinyMCE/js/tiny_mce/tiny_mce.js"></script>');
+		$this->TinyMCE->Html->expects($this->any())
+			->method('script')
+			->with(
+				'/TinyMCE/js/tiny_mce/tiny_mce.js',
+				array('inline' => false));
+		$this->TinyMCE->beforeRender('test.ctp');
 	}
 
 }
