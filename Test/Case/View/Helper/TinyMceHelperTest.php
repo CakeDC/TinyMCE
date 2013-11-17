@@ -87,7 +87,7 @@ class TinyMCETest extends CakeTestCase {
  * @return void
  * @access public
  */
-	public function startTest() {
+	public function setUp() {
 		Configure::write('Asset.timestamp', false);
 
 		$this->View = new TheTinyMCETestView(null);
@@ -103,7 +103,7 @@ class TinyMCETest extends CakeTestCase {
  * @return void
  * @access public
  */
-	public function endTest() {
+	public function tearDown() {
 		unset($this->TinyMCE, $this->View);
 	}
 
@@ -150,8 +150,9 @@ editor_selector : "mceSimple"
 	public function testEditorWithDefaults() {
 		$this->assertTrue(Configure::write('TinyMCE.editorOptions', array('height' => '100px')));
 
-		$this->TinyMCE->beforeRender();
+		$this->TinyMCE->beforeRender('test.ctp');
 		$this->TinyMCE->editor(array('theme' => 'advanced'));
+		debug($this->View->_scripts);
 		$this->assertEqual($this->View->_scripts[1], '<script type="text/javascript">
 //<![CDATA[
 tinymce.init({
@@ -180,7 +181,7 @@ height : "50px"
  * @access public
  */
 	public function testBeforeRender() {
-		$this->TinyMCE->beforeRender();
+		$this->TinyMCE->beforeRender('test.ctp');
 		$this->assertTrue(isset($this->View->_scripts[0]));
 		$this->assertEqual($this->View->_scripts[0], '<script type="text/javascript" src="/TinyMCE/js/tiny_mce/tiny_mce.js"></script>');
 	}
