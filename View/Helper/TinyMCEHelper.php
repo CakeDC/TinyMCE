@@ -1,11 +1,11 @@
 <?php
 /**
- * Copyright 2009-2010, Cake Development Corporation (http://cakedc.com)
+ * Copyright 2009-2013, Cake Development Corporation (http://cakedc.com)
  *
  * Licensed under The LGPL License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright Copyright 2009-2010, Cake Development Corporation (http://cakedc.com)
+ * @copyright Copyright 2009-2013, Cake Development Corporation (http://cakedc.com)
  * @license LGPL License (http://www.opensource.org/licenses/lgpl-2.1.php)
  */
 
@@ -82,7 +82,9 @@ class TinyMCEHelper extends AppHelper {
 
 /**
  * beforeRender callback
- *
+ * 
+ * @param string $viewFile The view file that is going to be rendered
+ * 
  * @return void
  */
 	public function beforeRender($viewFile) {
@@ -92,4 +94,5 @@ class TinyMCEHelper extends AppHelper {
 		}
 		$this->Html->script('/TinyMCE/js/tiny_mce/tiny_mce.js', array('inline' => false));
 	}
+
 }
