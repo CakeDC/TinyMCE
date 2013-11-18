@@ -70,10 +70,8 @@
 					t._done();
 			});
 
-			ed.onInit.add(function() {
-				if (ed.settings.content_css !== false)
-					ed.dom.loadCSS(url + '/css/content.css');
-			});
+			if (ed.settings.content_css !== false)
+				ed.contentCSS.push(url + '/css/content.css');
 
 			ed.onClick.add(t._showMenu, t);
 			ed.onContextMenu.add(t._showMenu, t);
@@ -128,30 +126,67 @@
 
 				c.onRenderMenu.add(function(c, m) {
 					m.add({title : 'spellchecker.langs', 'class' : 'mceMenuItemTitle'}).setDisabled(1);
+					t.menuItems = {};
 					each(t.languages, function(v, k) {
 						var o = {icon : 1}, mi;
 
 						o.onclick = function() {
-							mi.setSelected(1);
-							t.selectedItem.setSelected(0);
-							t.selectedItem = mi;
+							if (v == t.selectedLang) {
+								return;
+							}
+							t._updateMenu(mi);
 							t.selectedLang = v;
 						};
 
 						o.title = k;
 						mi = m.add(o);
 						mi.setSelected(v == t.selectedLang);
-
+						t.menuItems[v] = mi;
 						if (v == t.selectedLang)
 							t.selectedItem = mi;
-					})
+					});
 				});
+
+
 
 				return c;
 			}
 		},
 
+		setLanguage: function(lang) {
+			var t = this;
+
+			if (lang == t.selectedLang) {
+				// allowed
+				return;
+			}
+
+			if (tinymce.grep(t.languages, function(v) { return v === lang; }).length === 0) {
+				throw "Unknown language: " + lang;
+			}
+
+			t.selectedLang = lang;
+
+			// if the menu has been shown, update it as well
+			if (t.menuItems) {
+				t._updateMenu(t.menuItems[lang]);
+			}
+
+			if (t.active) {
+				// clear error in the old language.
+				t._done();
+
+				// Don't immediately block the UI to check spelling in the new language, this is an API not a user action.
+			}
+		},
+
 		// Internal functions
+
+		_updateMenu: function(mi) {
+			mi.setSelected(1);
+			this.selectedItem.setSelected(0);
+			this.selectedItem = mi;
+		},
 
 		_walk : function(n, f) {
 			var d = this.editor.getDoc(), w;
@@ -207,7 +242,7 @@
 		},
 
 		_removeWords : function(w) {
-			var ed = this.editor, dom = ed.dom, se = ed.selection, b = se.getBookmark();
+			var ed = this.editor, dom = ed.dom, se = ed.selection, r = se.getRng(true);
 
 			each(dom.select('span').reverse(), function(n) {
 				if (n && (dom.hasClass(n, 'mceItemHiddenSpellWord') || dom.hasClass(n, 'mceItemHidden'))) {
@@ -216,25 +251,15 @@
 				}
 			});
 
-			se.moveToBookmark(b);
+			se.setRng(r);
 		},
 
 		_markWords : function(wl) {
-			var r1, r2, r3, r4, r5, w = '', ed = this.editor, re = this._getSeparators(), dom = ed.dom, nl = [];
-			var se = ed.selection, b = se.getBookmark();
-
-			each(wl, function(v) {
-				w += (w ? '|' : '') + v;
-			});
-
-			r1 = new RegExp('([' + re + '])(' + w + ')([' + re + '])', 'g');
-			r2 = new RegExp('^(' + w + ')', 'g');
-			r3 = new RegExp('(' + w + ')([' + re + ']?)$', 'g');
-			r4 = new RegExp('^(' + w + ')([' + re + ']?)$', 'g');
-			r5 = new RegExp('(' + w + ')([' + re + '])', 'g');
+			var ed = this.editor, dom = ed.dom, doc = ed.getDoc(), se = ed.selection, r = se.getRng(true), nl = [],
+				w = wl.join('|'), re = this._getSeparators(), rx = new RegExp('(^|[' + re + '])(' + w + ')(?=[' + re + ']|$)', 'g');
 
 			// Collect all text nodes
-			this._walk(this.editor.getBody(), function(n) {
+			this._walk(ed.getBody(), function(n) {
 				if (n.nodeType == 3) {
 					nl.push(n);
 				}
@@ -242,22 +267,54 @@
 
 			// Wrap incorrect words in spans
 			each(nl, function(n) {
-				var v;
+				var node, elem, txt, pos, v = n.nodeValue;
 
-				if (n.nodeType == 3) {
-					v = n.nodeValue;
+				rx.lastIndex = 0;
+				if (rx.test(v)) {
+					// Encode the content
+					v = dom.encode(v);
+					// Create container element
+					elem = dom.create('span', {'class' : 'mceItemHidden'});
 
-					if (r1.test(v) || r2.test(v) || r3.test(v) || r4.test(v)) {
-						v = dom.encode(v);
-						v = v.replace(r5, '<span class="mceItemHiddenSpellWord">$1</span>$2');
-						v = v.replace(r3, '<span class="mceItemHiddenSpellWord">$1</span>$2');
-
-						dom.replace(dom.create('span', {'class' : 'mceItemHidden'}, v), n);
+					// Following code fixes IE issues by creating text nodes
+					// using DOM methods instead of innerHTML.
+					// Bug #3124: <PRE> elements content is broken after spellchecking.
+					// Bug #1408: Preceding whitespace characters are removed
+					// @TODO: I'm not sure that both are still issues on IE9.
+					if (tinymce.isIE) {
+						// Enclose mispelled words with temporal tag
+						v = v.replace(rx, '$1<mcespell>$2</mcespell>');
+						// Loop over the content finding mispelled words
+						while ((pos = v.indexOf('<mcespell>')) != -1) {
+							// Add text node for the content before the word
+							txt = v.substring(0, pos);
+							if (txt.length) {
+								node = doc.createTextNode(dom.decode(txt));
+								elem.appendChild(node);
+							}
+							v = v.substring(pos+10);
+							pos = v.indexOf('</mcespell>');
+							txt = v.substring(0, pos);
+							v = v.substring(pos+11);
+							// Add span element for the word
+							elem.appendChild(dom.create('span', {'class' : 'mceItemHiddenSpellWord'}, txt));
+						}
+						// Add text node for the rest of the content
+						if (v.length) {
+							node = doc.createTextNode(dom.decode(v));
+							elem.appendChild(node);
+						}
+					} else {
+						// Other browsers preserve whitespace characters on innerHTML usage
+						elem.innerHTML = v.replace(rx, '$1<span class="mceItemHiddenSpellWord">$2</span>');
 					}
+
+					// Finally, replace the node with the container
+					dom.replace(elem, n);
 				}
 			});
 
-			se.moveToBookmark(b);
+			se.setRng(r);
 		},
 
 		_showMenu : function(ed, e) {
@@ -266,15 +323,7 @@
 			e = 0; // Fixes IE memory leak
 
 			if (!m) {
-				p1 = DOM.getPos(ed.getContentAreaContainer());
-				//p2 = DOM.getPos(ed.getContainer());
-
-				m = ed.controlManager.createDropMenu('spellcheckermenu', {
-					offset_x : p1.x,
-					offset_y : p1.y,
-					'class' : 'mceNoIcons'
-				});
-
+				m = ed.controlManager.createDropMenu('spellcheckermenu', {'class' : 'mceNoIcons'});
 				t._menu = m;
 			}
 
@@ -300,43 +349,44 @@
 					} else
 						m.add({title : 'spellchecker.no_sug', 'class' : 'mceMenuItemTitle'}).setDisabled(1);
 
-					ignoreRpc = t.editor.getParam("spellchecker_enable_ignore_rpc", '');
-					m.add({
-						title : 'spellchecker.ignore_word',
-						onclick : function() {
-							var word = wordSpan.innerHTML;
+					if (ed.getParam('show_ignore_words', true)) {
+						ignoreRpc = t.editor.getParam("spellchecker_enable_ignore_rpc", '');
+						m.add({
+							title : 'spellchecker.ignore_word',
+							onclick : function() {
+								var word = wordSpan.innerHTML;
 
-							dom.remove(wordSpan, 1);
-							t._checkDone();
+								dom.remove(wordSpan, 1);
+								t._checkDone();
 
-							// tell the server if we need to
-							if (ignoreRpc) {
-								ed.setProgressState(1);
-								t._sendRPC('ignoreWord', [t.selectedLang, word], function(r) {
-									ed.setProgressState(0);
-								});
+								// tell the server if we need to
+								if (ignoreRpc) {
+									ed.setProgressState(1);
+									t._sendRPC('ignoreWord', [t.selectedLang, word], function(r) {
+										ed.setProgressState(0);
+									});
+								}
 							}
-						}
-					});
+						});
 
-					m.add({
-						title : 'spellchecker.ignore_words',
-						onclick : function() {
-							var word = wordSpan.innerHTML;
+						m.add({
+							title : 'spellchecker.ignore_words',
+							onclick : function() {
+								var word = wordSpan.innerHTML;
 
-							t._removeWords(dom.decode(word));
-							t._checkDone();
+								t._removeWords(dom.decode(word));
+								t._checkDone();
 
-							// tell the server if we need to
-							if (ignoreRpc) {
-								ed.setProgressState(1);
-								t._sendRPC('ignoreWords', [t.selectedLang, word], function(r) {
-									ed.setProgressState(0);
-								});
+								// tell the server if we need to
+								if (ignoreRpc) {
+									ed.setProgressState(1);
+									t._sendRPC('ignoreWords', [t.selectedLang, word], function(r) {
+										ed.setProgressState(0);
+									});
+								}
 							}
-						}
-					});
-
+						});
+					}
 
 					if (t.editor.getParam("spellchecker_enable_learn_rpc")) {
 						m.add({
@@ -357,6 +407,10 @@
 
 					m.update();
 				});
+
+				p1 = DOM.getPos(ed.getContentAreaContainer());
+				m.settings.offset_x = p1.x;
+				m.settings.offset_y = p1.y;
 
 				ed.selection.select(wordSpan);
 				p1 = dom.getPos(wordSpan);
