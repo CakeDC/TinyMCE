@@ -4,6 +4,8 @@ for cake 2.x
 
 The purpose of placing TinyMCE in a plugin is to keep it separate from a themed view, the regular webroot or the app in general, which makes it easier to update and overall follows the idea of keeping the code clean and modular.
 
+## Installation ##
+
 To use TinyMCE you need to clone git repository:
 
 	git clone git://github.com/CakeDC/TinyMCE.git Plugin/TinyMCE
@@ -13,6 +15,14 @@ Or if your CakePHP application is setup as a git repository, you can add it as a
 	git submodule add git://github.com/CakeDC/TinyMCE.git Plugin/TinyMCE
 
 Alternatively, you can download an archive from the [2.0 branch on Github](https://github.com/CakeDC/TinyMCE/zipball/2.0) and extract the contents to `Plugin/TinyMCE`.
+
+### Be aware of short tags ###
+
+If your php.ini has short tags enabled you won't be able to load the asset files from the plugin because the js contains a <? which the asset filter will interpret as php but fail to do so and your TinyMCE asset file will not be loaded.
+
+An alternative is to copy or symlink the editor files to your apps webroot. Which is the best way for performance reasons in any case.
+
+## Usage ##
 
 The TinyMCE helper is basically just a convenience helper that allows you to use php and CakePHP conventions to generate the configuration for TinyMCE and as an extra it allows you to load configs.
 
@@ -45,8 +55,6 @@ $this->TinyMCE->editor(array('theme' => 'advanced', 'mode' => 'textareas'));
 ```
 
 This will instruct TinyMCE to convert all `textarea` elements on the page to TinyMCE editors. If you require some more precise control, or want to change this behavior, checkout the [TinyMCE configuration options](http://www.tinymce.com/wiki.php/Configuration) on the TinyMCE website.
-
-## Advanced usage of the helper ##
 
 ### Multiple configurations
 
