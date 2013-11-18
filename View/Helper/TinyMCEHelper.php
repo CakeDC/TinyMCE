@@ -23,7 +23,9 @@ class TinyMCEHelper extends AppHelper {
  *
  * @var array
  */
-	public $helpers = array('Html');
+	public $helpers = array(
+		'Html'
+	);
 
 /**
  * Configuration
@@ -37,7 +39,10 @@ class TinyMCEHelper extends AppHelper {
  *
  * @var array
  */
-	protected $_defaults = array();
+	protected $_defaults = array(
+		'script' => '/TinyMCE/js/tiny_mce/tiny_mce.js',
+		'loadScript' => true,
+	);
 
 /**
  * Constructor
@@ -51,12 +56,14 @@ class TinyMCEHelper extends AppHelper {
 		if (!empty($configs) && is_array($configs)) {
 			$this->configs = $configs;
 		}
+		$this->settings = array_merge($this->_defaults, $settings);
 	}
 
 /**
  * Adds a new editor to the script block in the head
  *
  * @see http://www.tinymce.com/wiki.php/Configuration for a list of keys
+ * @throws RuntimeException
  * @param mixed If array camel cased TinyMCE Init config keys, if string it checks if a config with that name exists
  * @return void
  */
@@ -65,7 +72,7 @@ class TinyMCEHelper extends AppHelper {
 			if (isset($this->configs[$options])) {
 				$options = $this->configs[$options];
 			} else {
-				throw new OutOfBoundsException(sprintf(__('Invalid TinyMCE configuration preset %s'), $options));
+				throw new RuntimeException(sprintf(__('Invalid TinyMCE configuration preset %s'), $options));
 			}
 		}
 		$options = array_merge($this->_defaults, $options);
@@ -74,6 +81,7 @@ class TinyMCEHelper extends AppHelper {
 		foreach ($options as $option => $value) {
 			$lines .= Inflector::underscore($option) . ' : "' . $value . '",' . "\n";
 		}
+
 		// remove last comma from lines to avoid the editor breaking in Internet Explorer
 		$lines = rtrim($lines);
 		$lines = rtrim($lines, ',');
@@ -92,7 +100,9 @@ class TinyMCEHelper extends AppHelper {
 		if ($appOptions !== false && is_array($appOptions)) {
 			$this->_defaults = $appOptions;
 		}
-		$this->Html->script('/TinyMCE/js/tiny_mce/tiny_mce.js', array('inline' => false));
+		if ($this->settings['loadScript'] === true) {
+			$this->Html->script($this->settings['script'], array('inline' => false));
+		}
 	}
 
 }
