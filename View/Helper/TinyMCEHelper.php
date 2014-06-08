@@ -79,7 +79,11 @@ class TinyMCEHelper extends AppHelper {
 		$lines = '';
 
 		foreach ($options as $option => $value) {
-			$lines .= Inflector::underscore($option) . ' : "' . $value . '",' . "\n";
+			if (is_array($value) && isset($value['function'])) {
+				$lines .= $option . ' : ' . $value['function'] . ',' . "\n";
+			} else {
+				$lines .= Inflector::underscore($option) . ' : "' . $value . '",' . "\n";
+			}
 		}
 
 		// remove last comma from lines to avoid the editor breaking in Internet Explorer
