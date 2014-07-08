@@ -134,7 +134,7 @@ class TinyMCETest extends CakeTestCase {
 		$this->TinyMCE->configs = $this->configs;
 		$this->TinyMCE->editor('simple');
 
-		$this->expectException('OutOfBoundsException');
+		$this->expectException('RuntimeException');
 		$this->TinyMCE->editor('invalid-config');
 	}
 
