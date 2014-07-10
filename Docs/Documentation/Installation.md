@@ -3,6 +3,12 @@ Installation
 
 To install the plugin, place the files in a directory labelled "TinyMCE/" in your "app/Plugin/" directory.
 
+Then, include the following line in your `app/Config/bootstrap.php` to load the plugin in your application.
+
+```
+CakePlugin::load('TinyMCE');
+```
+
 Git Submodule
 -------------
 
