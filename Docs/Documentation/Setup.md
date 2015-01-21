@@ -21,7 +21,7 @@ $this->Html->script('/TinyMCE/js/tiny_mce/tiny_mce.js', array(
 ));
 ```
 
-and placing your own script in the head of the page. Please note that the helper will auto add the TinyMCE editor script to the header of the page. No need to to that by hand if you use the helper.
+and placing your own script in the head of the page. Please note that the helper will auto add the TinyMCE editor script to the header of the page. No need to do that by hand if you use the helper.
 
 If your app is not set up to work in the top level of your host / but instead in /yourapp/ the automatic inclusion of the script wont work. You'll manually have to add the js file to your app:
 
