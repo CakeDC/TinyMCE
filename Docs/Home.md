@@ -8,6 +8,7 @@ Requirements
 
 * CakePHP 2.5+
 * PHP 5.2.8+
+* jQuery
 
 Documentation
 -------------
