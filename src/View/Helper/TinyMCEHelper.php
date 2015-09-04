@@ -1,4 +1,13 @@
 <?php
+
+namespace TinyMCE\View\Helper;
+
+use Cake\View\Helper;
+use Cake\Core\Configure;
+use Exception;
+use Cake\Utility\Inflector;
+use Cake\View\View;
+
 /**
  * Copyright 2009-2013, Cake Development Corporation (http://cakedc.com)
  *
@@ -16,7 +25,7 @@
  * @subpackage TinyMCE.View.Helper
  */
 
-class TinyMCEHelper extends AppHelper {
+class TinyMCEHelper extends Helper {
 
 /**
  * Other helpers used by FormHelper
@@ -72,7 +81,7 @@ class TinyMCEHelper extends AppHelper {
 			if (isset($this->configs[$options])) {
 				$options = $this->configs[$options];
 			} else {
-				throw new RuntimeException(sprintf(__('Invalid TinyMCE configuration preset %s'), $options));
+				throw new Exception(sprintf(__('Invalid TinyMCE configuration preset %s'), $options));
 			}
 		}
 		$options = array_merge($this->_defaults, $options);
@@ -89,7 +98,7 @@ class TinyMCEHelper extends AppHelper {
 		// remove last comma from lines to avoid the editor breaking in Internet Explorer
 		$lines = rtrim($lines);
 		$lines = rtrim($lines, ',');
-		$this->Html->scriptBlock('tinymce.init({' . "\n" . $lines . "\n" . '});' . "\n", array('inline' => false));
+		echo $this->Html->scriptBlock('tinymce.init({' . "\n" . $lines . "\n" . '});' . "\n", array('inline' => false));
 	}
 
 /**
