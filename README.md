@@ -10,7 +10,7 @@ The purpose of placing TinyMCE in a plugin is to keep it separate from a themed 
 Requirements
 ------------
 
-* CakePHP 2.5+
+* CakePHP 3.0+
 * PHP 5.2.8+
 
 Documentation
