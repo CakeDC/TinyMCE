@@ -1,12 +1,18 @@
 ## How to use the helper ##
 
+First, load the plugin, unless already using `CakePlugin::loadAll()` in your bootstrap.php:
+
+```php
+CakePlugin::load('TinyMCE'); //Loads a single plugin named TinyMCE
+```
+
 Wherever you want to use it, load it in the controller
 
 ```php
 $this->helpers = array('TinyMCE.TinyMCE');
 ```
 
-In the view simply use the editor() method and pass config key/value pairs in an array.
+In the view, simply use the editor() method and pass config key/value pairs in an array.  Be sure to call this after loading jQuery.
 
 ```php
 $this->TinyMCE->editor(array('theme' => 'advanced', 'mode' => 'textareas'));
