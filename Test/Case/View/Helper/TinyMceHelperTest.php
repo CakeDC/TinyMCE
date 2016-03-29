@@ -67,7 +67,7 @@ class TinyMCETest extends CakeTestCase {
 		'withoutPath' => array(
 			'selector' => 'textarea',
 			'theme' => 'modern',
-            'elementpath' => false
+			'elementpath' => false
 		)
 	);
 
