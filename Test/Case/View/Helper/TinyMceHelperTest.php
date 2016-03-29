@@ -60,15 +60,14 @@ class TinyMCETest extends CakeTestCase {
  * @access public
  */
 	public $configs = array(
-		'simple' => array(
-			'mode' => 'textareas',
-			'theme' => 'simple',
-			'editor_selector' => 'mceSimple'
+		'modern' => array(
+			'selector' => 'textarea',
+			'theme' => 'modern',
 		),
-		'advanced' => array(
-			'mode' => 'textareas',
-			'theme' => 'advanced',
-			'editor_selector' => 'mceAdvanced'
+		'withoutPath' => array(
+			'selector' => 'textarea',
+			'theme' => 'modern',
+            'elementpath' => false
 		)
 	);
 
@@ -109,13 +108,13 @@ class TinyMCETest extends CakeTestCase {
 				'<script type="text/javascript">
 				//<![CDATA[
 				tinymce.init({
-				theme : "advanced"
+				theme : "modern"
 				});
 
 				//]]>
 				</script>',
 				array('inline' => false));
-		$this->TinyMCE->editor(array('theme' => 'advanced'));
+		$this->TinyMCE->editor(array('theme' => 'modern'));
 
 		$this->TinyMCE->Html->expects($this->any())
 			->method('scriptBlock')
@@ -123,16 +122,15 @@ class TinyMCETest extends CakeTestCase {
 				'<script type="text/javascript">
 				//<![CDATA[
 				tinymce.init({
-				mode : "textareas",
-				theme : "simple",
-				editor_selector : "mceSimple"
+				selector : "textarea",
+				theme : "modern"
 				});
 
 				//]]>
 				</script>',
 				array('inline' => false));
 		$this->TinyMCE->configs = $this->configs;
-		$this->TinyMCE->editor('simple');
+		$this->TinyMCE->editor('modern');
 
 		$this->expectException('RuntimeException');
 		$this->TinyMCE->editor('invalid-config');
@@ -154,14 +152,14 @@ class TinyMCETest extends CakeTestCase {
 				//<![CDATA[
 				tinymce.init({
 				height : "100px",
-				theme : "advanced"
+				theme : "modern"
 				});
 
 				//]]>
 				</script>',
 				array('inline' => false));
 		$this->TinyMCE->beforeRender('test.ctp');
-		$this->TinyMCE->editor(array('theme' => 'advanced'));
+		$this->TinyMCE->editor(array('theme' => 'modern'));
 
 		$this->TinyMCE->Html->expects($this->any())
 			->method('scriptBlock')
@@ -188,7 +186,7 @@ class TinyMCETest extends CakeTestCase {
 		$this->TinyMCE->Html->expects($this->any())
 			->method('script')
 			->with(
-				'/TinyMCE/js/tiny_mce/tiny_mce.js',
+				'/TinyMCE/js/tiny_mce4/tinymce.min.js',
 				array('inline' => false));
 		$this->TinyMCE->beforeRender('test.ctp');
 	}
