@@ -40,7 +40,7 @@ class TinyMCEHelper extends AppHelper {
  * @var array
  */
 	protected $_defaults = array(
-		'script' => '/TinyMCE/js/tiny_mce/tiny_mce.js',
+		'script' => '/TinyMCE/js/tiny_mce4/tinymce.min.js',
 		'loadScript' => true,
 	);
 
