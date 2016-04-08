@@ -3,13 +3,13 @@
 Load it in the controller where you want to use it.
 
 ```php
-public $helpers = array('TinyMCE.TinyMCE');
+public $helpers = ['TinyMCE.TinyMCE'];
 ```
 
 At the view's top where you want to use it, simply add the editor() method and pass config key/value pairs in an array.
 
 ```php
-$this->TinyMCE->editor(array('theme' => 'modern', 'selector' => 'textarea'));
+$this->TinyMCE->editor(['theme' => 'modern', 'selector' => 'textarea']);
 ```
 
 This will instruct TinyMCE to convert all `textarea` elements on the page to TinyMCE editors. If you require some more precise control, or want to change this behavior, checkout the [TinyMCE configuration options](http://www.tinymce.com/wiki.php/Configuration) on the TinyMCE website.
@@ -28,27 +28,26 @@ The helper has a configs property which can be filled with data from database or
 Here is a basic example of configuration data:
 
 ```php
-$configs = array(
-	'modern' => array(
+$configs = [
+	'modern' => [
 		'selector' => 'textarea',
 		'theme' => 'modern'
-	),
-	'withoutPath' => array(
+	],
+	'withoutPath' => [
 	    'selector' => 'textarea',
 	    'theme' => 'modern',
 	    'elementpath' => false
-	)
-);
-
+	]
+];
 $this->TinyMCE->configs = $configs;
 ```
 
-You can also put the configuration in APP/config/bootstap.php or another config file and load it. Inside the config file you have you can write the config as above to the TinyMce configuration:
+You can also put the configuration in APP/config/bootstrap.php or another config file and load it. Inside the config file you have you can write the config as above to the TinyMce configuration:
 
 ```php
-Configure::write('TinyMCE.configs', array(
+Configure::write('TinyMCE.configs', [
 	'modern' => ...,
-	'withoutPath' => ...));
+	'withoutPath' => ...]);
 ```
 
 The different sets of configuration data will be auto loaded by the helper inside its constructor. It is suggested that you use this way of passing different configs to the helper because by this you'll be able to store all of them in one place.
@@ -67,7 +66,7 @@ If you want a quick way to configure default values for all the TinyMCE Editors 
 Here is an example of a line you could have in `bootstrap.php`:
 
 ```php
-Configure::write('TinyMCE.editorOptions', array('height' => '300px'))
+Configure::write('TinyMCE.editorOptions', ['height' => '300px'])
 ```
 
 It will make all editors to have a 300px height. You may want to override this value for a single editor. To do so, just pass the option to the editor() method and it will override the default value.
