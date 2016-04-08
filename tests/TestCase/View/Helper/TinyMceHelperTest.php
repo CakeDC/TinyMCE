@@ -31,19 +31,19 @@ use TinyMCE\View\Helper\TinyMCEHelper;
 class TheTinyMCETestController extends Controller
 {
 
-/**
- * name property
- *
- * @var string 'TheTest'
- */
-	public $name = 'TheTest';
+    /**
+     * name property
+     *
+     * @var string 'TheTest'
+     */
+    public $name = 'TheTest';
 
-/**
- * uses property
- *
- * @var mixed null
- */
-	public $uses = null;
+    /**
+     * uses property
+     *
+     * @var mixed null
+     */
+    public $uses = null;
 }
 
 /**
@@ -54,148 +54,153 @@ class TheTinyMCETestController extends Controller
 class TinyMCETest extends TestCase
 {
 
-/**
- * Helper being tested
- *
- * @var object TinyMCEHelper
- * @access public
- */
-	public $TinyMCE = null;
+    /**
+     * Helper being tested
+     *
+     * @var object TinyMCEHelper
+     * @access public
+     */
+    public $TinyMCE = null;
 
-/**
- * @var array
- * @access public
- */
-	public $configs = [
-		'modern' => [
-			'selector' => 'textarea',
-			'theme' => 'modern',
-		],
-		'withoutPath' => [
-			'selector' => 'textarea',
-			'theme' => 'modern',
-			'elementpath' => false
-		]
-	];
+    /**
+     * @var array
+     * @access public
+     */
+    public $configs = [
+        'modern' => [
+            'selector' => 'textarea',
+            'theme' => 'modern',
+        ],
+        'withoutPath' => [
+            'selector' => 'textarea',
+            'theme' => 'modern',
+            'elementpath' => false
+        ]
+    ];
 
-/**
- * startTest
- *
- * @return void
- * @access public
- */
-	public function setUp() {
-		Configure::write('Asset.timestamp', false);
+    /**
+     * startTest
+     *
+     * @return void
+     * @access public
+     */
+    public function setUp()
+    {
+        Configure::write('Asset.timestamp', false);
 
-		$this->View = new View(null);
-		$this->TinyMCE = new TinyMCEHelper($this->View);
-		$this->TinyMCE->Html = $this->getMock('HtmlHelper', ['script'], [$this->View]);
-	}
+        $this->View = new View(null);
+        $this->TinyMCE = new TinyMCEHelper($this->View);
+        $this->TinyMCE->Html = $this->getMock('HtmlHelper', ['script'], [$this->View]);
+    }
 
-/**
- * endTest
- *
- * @return void
- * @access public
- */
-	public function tearDown() {
-		unset($this->TinyMCE, $this->View);
-	}
+    /**
+     * endTest
+     *
+     * @return void
+     * @access public
+     */
+    public function tearDown()
+    {
+        unset($this->TinyMCE, $this->View);
+    }
 
-/**
- * testEditor
- *
- * @return void
- * @access public
- */
-	public function testEditor() {
-		$this->TinyMCE->Html->expects($this->any())
-			->method('scriptBlock')
-			->with(
-				'<script type="text/javascript">
-				//<![CDATA[
-				tinymce.init({
-				theme : "modern"
-				});
+    /**
+     * testEditor
+     *
+     * @return void
+     * @access public
+     */
+    public function testEditor()
+    {
+        $this->TinyMCE->Html->expects($this->any())
+            ->method('scriptBlock')
+            ->with(
+                '<script type="text/javascript">
+                //<![CDATA[
+                tinymce.init({
+                theme : "modern"
+                });
 
-				//]]>
-				</script>',
-				['inline' => false]);
-		$this->TinyMCE->editor(['theme' => 'modern']);
+                //]]>
+                </script>',
+                ['inline' => false]);
+        $this->TinyMCE->editor(['theme' => 'modern']);
 
-		$this->TinyMCE->Html->expects($this->any())
-			->method('scriptBlock')
-			->with(
-				'<script type="text/javascript">
-				//<![CDATA[
-				tinymce.init({
-				selector : "textarea",
-				theme : "modern"
-				});
+        $this->TinyMCE->Html->expects($this->any())
+            ->method('scriptBlock')
+            ->with(
+                '<script type="text/javascript">
+                //<![CDATA[
+                tinymce.init({
+                selector : "textarea",
+                theme : "modern"
+                });
 
-				//]]>
-				</script>',
-				['inline' => false]);
-		$this->TinyMCE->configs = $this->configs;
-		$this->TinyMCE->editor('modern');
+                //]]>
+                </script>',
+                ['inline' => false]);
+        $this->TinyMCE->configs = $this->configs;
+        $this->TinyMCE->editor('modern');
 
-		$this->expectException('RuntimeException');
-		$this->TinyMCE->editor('invalid-config');
-	}
+        $this->expectException('RuntimeException');
+        $this->TinyMCE->editor('invalid-config');
+    }
 
-/**
- * testEditor with app wide options
- *
- * @return void
- * @access public
- */
-	public function testEditorWithDefaults() {
-		$this->assertTrue(Configure::write('TinyMCE.editorOptions', ['height' => '100px']));
+    /**
+     * testEditor with app wide options
+     *
+     * @return void
+     * @access public
+     */
+    public function testEditorWithDefaults()
+    {
+        $this->assertTrue(Configure::write('TinyMCE.editorOptions', ['height' => '100px']));
 
-		$this->TinyMCE->Html->expects($this->any())
-			->method('scriptBlock')
-			->with(
-				'<script type="text/javascript">
-				//<![CDATA[
-				tinymce.init({
-				height : "100px",
-				theme : "modern"
-				});
+        $this->TinyMCE->Html->expects($this->any())
+            ->method('scriptBlock')
+            ->with(
+                '<script type="text/javascript">
+                //<![CDATA[
+                tinymce.init({
+                height : "100px",
+                theme : "modern"
+                });
 
-				//]]>
-				</script>',
-				['inline' => false]);
-		$this->TinyMCE->beforeRender('test.ctp');
-		$this->TinyMCE->editor(['theme' => 'modern']);
+                //]]>
+                </script>',
+                ['inline' => false]);
+        $this->TinyMCE->beforeRender('test.ctp');
+        $this->TinyMCE->editor(['theme' => 'modern']);
 
-		$this->TinyMCE->Html->expects($this->any())
-			->method('scriptBlock')
-			->with(
-				'<script type="text/javascript">
-				//<![CDATA[
-				tinymce.init({
-				height : "50px"
-				});
+        $this->TinyMCE->Html->expects($this->any())
+            ->method('scriptBlock')
+            ->with(
+                '<script type="text/javascript">
+                //<![CDATA[
+                tinymce.init({
+                height : "50px"
+                });
 
-				//]]>
-				</script>',
-				['inline' => false]);
-		$this->TinyMCE->editor(['height' => '50px']);
-	}
+                //]]>
+                </script>',
+                ['inline' => false]);
+        $this->TinyMCE->editor(['height' => '50px']);
+    }
 
-/**
- * testBeforeRender
- *
- * @return void
- * @access public
- */
-	public function testBeforeRender() {
-		$this->TinyMCE->Html->expects($this->any())
-			->method('script')
-			->with(
-				'/TinyMCE/js/tiny_mce4/tinymce.min.js',
-				['inline' => false]);
-		$this->TinyMCE->beforeRender('test.ctp');
-	}
+    /**
+     * testBeforeRender
+     *
+     * @return void
+     * @access public
+     */
+    public function testBeforeRender()
+    {
+        $this->TinyMCE->Html->expects($this->any())
+            ->method('script')
+            ->with(
+                '/TinyMCE/js/tiny_mce4/tinymce.min.js',
+                ['inline' => false]);
+        $this->TinyMCE->beforeRender('test.ctp');
+    }
 
 }
