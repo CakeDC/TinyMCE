@@ -138,7 +138,7 @@ class TinyMCETest extends TestCase
 
                 //]]>
                 </script>',
-                ['inline' => false]);
+                ['block' => true]);
         $this->TinyMCE->configs = $this->configs;
         $this->TinyMCE->editor('modern');
 
@@ -168,7 +168,7 @@ class TinyMCETest extends TestCase
 
                 //]]>
                 </script>',
-                ['inline' => false]);
+                ['block' => true]);
         $this->TinyMCE->beforeRender('test.ctp');
         $this->TinyMCE->editor(['theme' => 'modern']);
 
@@ -183,7 +183,7 @@ class TinyMCETest extends TestCase
 
                 //]]>
                 </script>',
-                ['inline' => false]);
+                ['block' => true]);
         $this->TinyMCE->editor(['height' => '50px']);
     }
 
@@ -199,7 +199,7 @@ class TinyMCETest extends TestCase
             ->method('script')
             ->with(
                 '/TinyMCE/js/tiny_mce4/tinymce.min.js',
-                ['inline' => false]);
+                ['block' => true]);
         $this->TinyMCE->beforeRender('test.ctp');
     }
 
