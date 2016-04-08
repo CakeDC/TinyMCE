@@ -3,7 +3,7 @@
 	"description": "TinyMCE Plugin for CakePHP",
 	"type": "cakephp-plugin",
 	"keywords": ["tinymce", "wysiwyg", "editor"],
-	"homepage": "http://cakedc.com",
+	"homepage": "https://github.com/CakeDC/TinyMCE",
 	"license": "MIT",
 	"authors": [
 		{
@@ -22,8 +22,24 @@
 	},
 	"require": {
 		"php": ">=5.2.8",
-		"composer/installers": "*"
+        "cakephp/plugin-installer": "*"
 	},
+    "require-dev": {
+        "cakephp/cakephp": "~3.0",
+        "phpunit/phpunit": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "TinyMCE\\": "src",
+            "TinyMCE\\Test\\": "tests"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "TinyMCE\\Test\\": "tests",
+            "Cake\\Test\\": "vendor/cakephp/cakephp/tests"
+        }
+    },
 	"extra": {
 		"installer-name": "TinyMCE"
 	}
