@@ -10,11 +10,11 @@ use Exception;
 /**
  * Copyright 2009-2013, Cake Development Corporation (http://cakedc.com)
  *
- * Licensed under The LGPL License
+ * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
  * @copyright Copyright 2009-2013, Cake Development Corporation (http://cakedc.com)
- * @license LGPL License (http://www.opensource.org/licenses/lgpl-2.1.php)
+ * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
 /**
