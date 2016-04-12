@@ -39,10 +39,7 @@ class TinyMCEHelper extends AppHelper {
  *
  * @var array
  */
-	protected $_defaults = array(
-		'script' => '/TinyMCE/js/tiny_mce4/tinymce.min.js',
-		'loadScript' => true,
-	);
+	protected $_defaults = array();
 
 /**
  * Constructor
@@ -53,9 +50,15 @@ class TinyMCEHelper extends AppHelper {
 	public function __construct(View $View, $settings = array()) {
 		parent::__construct($View, $settings);
 		$configs = Configure::read('TinyMCE.configs');
+        $version = Configure::read('TinyMCE.version');
 		if (!empty($configs) && is_array($configs)) {
 			$this->configs = $configs;
 		}
+        $this->_defaults = array(
+            'script' => $this->_getScriptVersion($version),
+            'loadScript' => true
+        );
+
 		$this->settings = array_merge($this->_defaults, $settings);
 	}
 
@@ -108,5 +111,20 @@ class TinyMCEHelper extends AppHelper {
 			$this->Html->script($this->settings['script'], array('inline' => false));
 		}
 	}
+
+    /**
+     * Return the plugin version to be used.
+     *
+     * @param $version
+     * @return string
+     */
+    protected function _getScriptVersion($version) {
+        if (empty($version)) {
+            $scriptVersion = '/TinyMCE/js/tiny_mce4/tinymce.min.js';
+        } else {
+            $scriptVersion = '/TinyMCE/js/tiny_mce' . $version . '/tinymce.min.js';
+        }
+        return $scriptVersion;
+    }
 
 }
