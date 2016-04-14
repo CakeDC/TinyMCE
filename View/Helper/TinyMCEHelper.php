@@ -59,15 +59,11 @@ class TinyMCEHelper extends AppHelper {
 	public function __construct(View $View, $settings = array()) {
 		parent::__construct($View, $settings);
 		$configs = Configure::read('TinyMCE.configs');
-        $version = Configure::read('TinyMCE.version');
 		if (!empty($configs) && is_array($configs)) {
 			$this->configs = $configs;
 		}
-        $this->_defaults = array(
-            'script' => $this->_getScriptFolderVersion($version),
-            'loadScript' => true
-        );
-		$this->settings = array_merge($this->_defaults, $settings);
+
+        $this->settings = $settings;
 	}
 
 /**
@@ -86,6 +82,12 @@ class TinyMCEHelper extends AppHelper {
 				throw new RuntimeException(sprintf(__('Invalid TinyMCE configuration preset %s'), $options));
 			}
 		}
+
+        $this->_defaults = array(
+            'script' => $this->_getScriptFolderVersion(Configure::read('TinyMCE.version')),
+            'loadScript' => true
+        );
+        $this->settings = array_merge($this->_defaults);
 		$options = array_merge($this->_defaults, $options);
 		$lines = '';
 
@@ -111,7 +113,13 @@ class TinyMCEHelper extends AppHelper {
  */
 	public function beforeRender($viewFile) {
 		$appOptions = Configure::read('TinyMCE.editorOptions');
-		if ($appOptions !== false && is_array($appOptions)) {
+        $this->_defaults = array(
+            'script' => $this->_getScriptFolderVersion(Configure::read('TinyMCE.version')),
+            'loadScript' => true
+        );
+        $this->settings = array_merge($this->_defaults);
+
+        if ($appOptions !== false && is_array($appOptions)) {
 			$this->_defaults = $appOptions;
 		}
 		if ($this->settings['loadScript'] === true) {
