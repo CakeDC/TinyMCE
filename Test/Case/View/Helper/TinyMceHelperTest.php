@@ -96,13 +96,15 @@ class TinyMCETest extends CakeTestCase {
 	}
 
 /**
- * testEditor
+ * testEditor for TinyMCE version 3
  *
  * @return void
  * @access public
  */
-	public function testEditor() {
-		$this->TinyMCE->Html->expects($this->any())
+	public function testEditorVersion3() {
+        $this->assertTrue(Configure::write('TinyMCE.version', '4'));
+
+        $this->TinyMCE->Html->expects($this->any())
 			->method('scriptBlock')
 			->with(
 				'<script type="text/javascript">
@@ -135,6 +137,49 @@ class TinyMCETest extends CakeTestCase {
 		$this->expectException('RuntimeException');
 		$this->TinyMCE->editor('invalid-config');
 	}
+
+    /**
+     * testEditor for TinyMCE version 4
+     *
+     * @return void
+     * @access public
+     */
+    public function testEditorVersion4() {
+        $this->assertTrue(Configure::write('TinyMCE.version', '4'));
+
+        $this->TinyMCE->Html->expects($this->any())
+            ->method('scriptBlock')
+            ->with(
+                '<script type="text/javascript">
+				//<![CDATA[
+				tinymce.init({
+				theme : "modern"
+				});
+
+				//]]>
+				</script>',
+                array('inline' => false));
+        $this->TinyMCE->editor(array('theme' => 'modern'));
+
+        $this->TinyMCE->Html->expects($this->any())
+            ->method('scriptBlock')
+            ->with(
+                '<script type="text/javascript">
+				//<![CDATA[
+				tinymce.init({
+				selector : "textarea",
+				theme : "modern"
+				});
+
+				//]]>
+				</script>',
+                array('inline' => false));
+        $this->TinyMCE->configs = $this->configs;
+        $this->TinyMCE->editor('modern');
+
+        $this->expectException('RuntimeException');
+        $this->TinyMCE->editor('invalid-config');
+    }
 
 /**
  * testEditor with app wide options
@@ -177,13 +222,32 @@ class TinyMCETest extends CakeTestCase {
 	}
 
 /**
- * testBeforeRender
+ * testBeforeRender for TinyMCE Version 3
  *
  * @return void
  * @access public
  */
-	public function testBeforeRender() {
-		$this->TinyMCE->Html->expects($this->any())
+    public function testBeforeRenderVersion3() {
+        $this->assertTrue(Configure::write('TinyMCE.version', '3'));
+
+        $this->TinyMCE->Html->expects($this->any())
+            ->method('script')
+            ->with(
+                '/TinyMCE/js/tiny_mce/tiny_mce.js',
+                array('inline' => false));
+        $this->TinyMCE->beforeRender('test.ctp');
+    }
+
+/**
+ * testBeforeRender for TinyMCE Version 4
+ *
+ * @return void
+ * @access public
+ */
+	public function testBeforeRenderVersion4() {
+        $this->assertTrue(Configure::write('TinyMCE.version', '4'));
+
+        $this->TinyMCE->Html->expects($this->any())
 			->method('script')
 			->with(
 				'/TinyMCE/js/tiny_mce4/tinymce.min.js',
