@@ -16,6 +16,8 @@
  * @subpackage TinyMCE.View.Helper
  */
 
+App::uses('Folder', 'Utility');
+
 class TinyMCEHelper extends AppHelper {
 
 /**
@@ -42,6 +44,13 @@ class TinyMCEHelper extends AppHelper {
 	protected $_defaults = array();
 
 /**
+ * Constants variables
+ *
+ */
+	const DEFAULT_TINYMCE_VERSION = '4';
+	const TINYMCE_SCRIPT_PATH = 'TinyMCE/js/tiny_mce';
+
+/**
  * Constructor
  *
  * @param View $View The View this helper is being attached to.
@@ -55,10 +64,9 @@ class TinyMCEHelper extends AppHelper {
 			$this->configs = $configs;
 		}
         $this->_defaults = array(
-            'script' => $this->_getScriptVersion($version),
+            'script' => $this->_getScriptFolderVersion($version),
             'loadScript' => true
         );
-
 		$this->settings = array_merge($this->_defaults, $settings);
 	}
 
@@ -97,9 +105,8 @@ class TinyMCEHelper extends AppHelper {
 
 /**
  * beforeRender callback
- * 
+ *
  * @param string $viewFile The view file that is going to be rendered
- * 
  * @return void
  */
 	public function beforeRender($viewFile) {
@@ -113,17 +120,28 @@ class TinyMCEHelper extends AppHelper {
 	}
 
     /**
-     * Return the plugin version to be used.
+     * Return the folder to be used
      *
+     * @throws NotImplementedException
      * @param $version
      * @return string
      */
-    protected function _getScriptVersion($version) {
+    protected function _getScriptFolderVersion($version) {
         if (empty($version)) {
-            $scriptVersion = '/TinyMCE/js/tiny_mce4/tinymce.min.js';
+            $scriptVersion = DS . self::TINYMCE_SCRIPT_PATH . self::DEFAULT_TINYMCE_VERSION . DS . 'tinymce.min.js';
         } else {
-            $scriptVersion = '/TinyMCE/js/tiny_mce' . $version . '/tinymce.min.js';
+            $folder = new Folder(APP . 'Plugin' . DS . 'TinyMCE' . DS . 'webroot' . DS . 'js' . DS . 'tiny_mce' . $version);
+            if (is_null($folder->path) && $version > 3) {
+                throw new NotImplementedException(sprintf(__('This is not a valid TinyMCE version: ' . $version . '. Please check the documentation.')));
+            }
+            //Version 3 has a different folder structure.
+            if ($version == '3') {
+                $scriptVersion = DS . self::TINYMCE_SCRIPT_PATH . DS . 'tiny_mce.js';
+            } else {
+                $scriptVersion = DS . self::TINYMCE_SCRIPT_PATH . $version . DS . 'tinymce.min.js';
+            }
         }
+
         return $scriptVersion;
     }
 
