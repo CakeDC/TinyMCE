@@ -6,7 +6,7 @@ Release 1.4.0
 
 https://github.com/CakeDC/TinyMCE/tree/1.4.0
 
- * [b1858b7](https://github.com/CakeDC/TinyMCE/commit/b1858b7) Adding goblal setting to override TinyMCE version
+ * [b1858b7](https://github.com/CakeDC/TinyMCE/commit/b1858b7) Adding global setting to override TinyMCE version
  * [ba7145e](https://github.com/CakeDC/TinyMCE/commit/ba7145e) Changing defaults setting from construct
 
 Release 1.3.0
