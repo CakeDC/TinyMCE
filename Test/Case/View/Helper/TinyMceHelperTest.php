@@ -101,49 +101,49 @@ class TinyMCETest extends CakeTestCase {
  * @return void
  * @access public
  */
-	public function testEditorVersion3() {
-        $this->assertTrue(Configure::write('TinyMCE.version', '4'));
+    public function testEditorVersion3() {
+        $this->assertTrue(Configure::write('TinyMCE.version', '3'));
+        $this->TinyMCE->Html->expects($this->any())
+            ->method('scriptBlock')
+            ->with(
+                '<script type="text/javascript">
+				//<![CDATA[
+				tinymce.init({
+				theme : "advanced"
+				});
+
+				//]]>
+				</script>',
+                array('inline' => false));
+        $this->TinyMCE->editor(array('theme' => 'advanced'));
 
         $this->TinyMCE->Html->expects($this->any())
-			->method('scriptBlock')
-			->with(
-				'<script type="text/javascript">
+            ->method('scriptBlock')
+            ->with(
+                '<script type="text/javascript">
 				//<![CDATA[
 				tinymce.init({
-				theme : "modern"
+				mode : "textareas",
+				theme : "simple",
+				editor_selector : "mceSimple"
 				});
 
 				//]]>
 				</script>',
-				array('inline' => false));
-		$this->TinyMCE->editor(array('theme' => 'modern'));
+                array('inline' => false));
+        $this->TinyMCE->configs = $this->configs;
+        $this->TinyMCE->editor('simple');
 
-		$this->TinyMCE->Html->expects($this->any())
-			->method('scriptBlock')
-			->with(
-				'<script type="text/javascript">
-				//<![CDATA[
-				tinymce.init({
-				selector : "textarea",
-				theme : "modern"
-				});
+        $this->expectException('RuntimeException');
+        $this->TinyMCE->editor('invalid-config');
+    }
 
-				//]]>
-				</script>',
-				array('inline' => false));
-		$this->TinyMCE->configs = $this->configs;
-		$this->TinyMCE->editor('modern');
-
-		$this->expectException('RuntimeException');
-		$this->TinyMCE->editor('invalid-config');
-	}
-
-    /**
-     * testEditor for TinyMCE version 4
-     *
-     * @return void
-     * @access public
-     */
+/**
+ * testEditor for TinyMCE version 4
+ *
+ * @return void
+ * @access public
+ */
     public function testEditorVersion4() {
         $this->assertTrue(Configure::write('TinyMCE.version', '4'));
 
@@ -182,13 +182,55 @@ class TinyMCETest extends CakeTestCase {
     }
 
 /**
- * testEditor with app wide options
+ * testEditor with app wide options for TinyMCE version 3
  *
  * @return void
  * @access public
  */
-	public function testEditorWithDefaults() {
-		$this->assertTrue(Configure::write('TinyMCE.editorOptions', array('height' => '100px')));
+    public function testEditorWithDefaultsVersion3() {
+        $this->assertTrue(Configure::write('TinyMCE.version', '3'));
+        $this->assertTrue(Configure::write('TinyMCE.editorOptions', array('height' => '100px')));
+
+        $this->TinyMCE->Html->expects($this->any())
+            ->method('scriptBlock')
+            ->with(
+                '<script type="text/javascript">
+				//<![CDATA[
+				tinymce.init({
+				height : "100px",
+				theme : "advanced"
+				});
+
+				//]]>
+				</script>',
+                array('inline' => false));
+        $this->TinyMCE->beforeRender('test.ctp');
+        $this->TinyMCE->editor(array('theme' => 'advanced'));
+
+        $this->TinyMCE->Html->expects($this->any())
+            ->method('scriptBlock')
+            ->with(
+                '<script type="text/javascript">
+				//<![CDATA[
+				tinymce.init({
+				height : "50px"
+				});
+
+				//]]>
+				</script>',
+                array('inline' => false));
+        $this->TinyMCE->editor(array('height' => '50px'));
+    }
+
+/**
+ * testEditor with app wide options for TinyMCE Version 4
+ *
+ * @return void
+ * @access public
+ */
+	public function testEditorWithDefaultsVersion4() {
+        $this->assertTrue(Configure::write('TinyMCE.version', '4'));
+        $this->assertTrue(Configure::write('TinyMCE.editorOptions', array('height' => '100px')));
 
 		$this->TinyMCE->Html->expects($this->any())
 			->method('scriptBlock')
@@ -229,7 +271,6 @@ class TinyMCETest extends CakeTestCase {
  */
     public function testBeforeRenderVersion3() {
         $this->assertTrue(Configure::write('TinyMCE.version', '3'));
-
         $this->TinyMCE->Html->expects($this->any())
             ->method('script')
             ->with(
@@ -246,7 +287,6 @@ class TinyMCETest extends CakeTestCase {
  */
 	public function testBeforeRenderVersion4() {
         $this->assertTrue(Configure::write('TinyMCE.version', '4'));
-
         $this->TinyMCE->Html->expects($this->any())
 			->method('script')
 			->with(
