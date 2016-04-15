@@ -25,30 +25,30 @@ class TinyMCEHelper extends AppHelper {
  *
  * @var array
  */
-	public $helpers = array(
-		'Html'
-	);
+    public $helpers = array(
+        'Html'
+    );
 
 /**
  * Configuration
  *
  * @var array
  */
-	public $configs = array();
+    public $configs = array();
 
 /**
  * Default values
  *
  * @var array
  */
-	protected $_defaults = array();
+    protected $_defaults = array();
 
 /**
  * Constants variables
  *
  */
-	const DEFAULT_TINYMCE_VERSION = '4';
-	const TINYMCE_SCRIPT_PATH = 'TinyMCE/js/tiny_mce';
+    const DEFAULT_TINYMCE_VERSION = '4';
+    const TINYMCE_SCRIPT_PATH = 'TinyMCE/js/tiny_mce';
 
 /**
  * Constructor
@@ -56,15 +56,15 @@ class TinyMCEHelper extends AppHelper {
  * @param View $View The View this helper is being attached to.
  * @param array $settings Configuration settings for the helper.
  */
-	public function __construct(View $View, $settings = array()) {
-		parent::__construct($View, $settings);
-		$configs = Configure::read('TinyMCE.configs');
-		if (!empty($configs) && is_array($configs)) {
-			$this->configs = $configs;
-		}
+    public function __construct(View $View, $settings = array()) {
+        parent::__construct($View, $settings);
+        $configs = Configure::read('TinyMCE.configs');
+        if (!empty($configs) && is_array($configs)) {
+            $this->configs = $configs;
+        }
 
         $this->settings = $settings;
-	}
+    }
 
 /**
  * Adds a new editor to the script block in the head
@@ -74,36 +74,36 @@ class TinyMCEHelper extends AppHelper {
  * @param mixed If array camel cased TinyMCE Init config keys, if string it checks if a config with that name exists
  * @return void
  */
-	public function editor($options = array()) {
-		if (is_string($options)) {
-			if (isset($this->configs[$options])) {
-				$options = $this->configs[$options];
-			} else {
-				throw new RuntimeException(sprintf(__('Invalid TinyMCE configuration preset %s'), $options));
-			}
-		}
+    public function editor($options = array()) {
+        if (is_string($options)) {
+            if (isset($this->configs[$options])) {
+                $options = $this->configs[$options];
+            } else {
+                throw new RuntimeException(sprintf(__('Invalid TinyMCE configuration preset %s'), $options));
+            }
+        }
 
         $this->_defaults = array(
             'script' => $this->_getScriptFolderVersion(Configure::read('TinyMCE.version')),
             'loadScript' => true
         );
         $this->settings = array_merge($this->_defaults);
-		$options = array_merge($this->_defaults, $options);
-		$lines = '';
+        $options = array_merge($this->_defaults, $options);
+        $lines = '';
 
-		foreach ($options as $option => $value) {
-			if (is_array($value) && isset($value['function'])) {
-				$lines .= $option . ' : ' . $value['function'] . ',' . "\n";
-			} else {
-				$lines .= Inflector::underscore($option) . ' : "' . $value . '",' . "\n";
-			}
-		}
+        foreach ($options as $option => $value) {
+            if (is_array($value) && isset($value['function'])) {
+                $lines .= $option . ' : ' . $value['function'] . ',' . "\n";
+            } else {
+                $lines .= Inflector::underscore($option) . ' : "' . $value . '",' . "\n";
+            }
+        }
 
-		// remove last comma from lines to avoid the editor breaking in Internet Explorer
-		$lines = rtrim($lines);
-		$lines = rtrim($lines, ',');
-		$this->Html->scriptBlock('tinymce.init({' . "\n" . $lines . "\n" . '});' . "\n", array('inline' => false));
-	}
+        // remove last comma from lines to avoid the editor breaking in Internet Explorer
+        $lines = rtrim($lines);
+        $lines = rtrim($lines, ',');
+        $this->Html->scriptBlock('tinymce.init({' . "\n" . $lines . "\n" . '});' . "\n", array('inline' => false));
+    }
 
 /**
  * beforeRender callback
@@ -111,8 +111,8 @@ class TinyMCEHelper extends AppHelper {
  * @param string $viewFile The view file that is going to be rendered
  * @return void
  */
-	public function beforeRender($viewFile) {
-		$appOptions = Configure::read('TinyMCE.editorOptions');
+    public function beforeRender($viewFile) {
+        $appOptions = Configure::read('TinyMCE.editorOptions');
         $this->_defaults = array(
             'script' => $this->_getScriptFolderVersion(Configure::read('TinyMCE.version')),
             'loadScript' => true
@@ -120,12 +120,12 @@ class TinyMCEHelper extends AppHelper {
         $this->settings = array_merge($this->_defaults);
 
         if ($appOptions !== false && is_array($appOptions)) {
-			$this->_defaults = $appOptions;
-		}
-		if ($this->settings['loadScript'] === true) {
-			$this->Html->script($this->settings['script'], array('inline' => false));
-		}
-	}
+            $this->_defaults = $appOptions;
+        }
+        if ($this->settings['loadScript'] === true) {
+            $this->Html->script($this->settings['script'], array('inline' => false));
+        }
+    }
 
     /**
      * Return the folder to be used
