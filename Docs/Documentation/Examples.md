@@ -6,7 +6,23 @@ Load it in the controller where you want to use it.
 public $helpers = array('TinyMCE.TinyMCE');
 ```
 
+You can choose the version of TinyMCE, to do so, in APP/config/bootstrap.php you must add the following:
+
+```php
+Configure::write('TinyMCE.version', '3');
+```
+
+Right now, TinyMCE plugin has two versions: 3 and 4. To know, in the future, about newest versions, please check the [CHANGELOG](../../CHANGELOG.md).
+
 At the view's top where you want to use it, simply add the editor() method and pass config key/value pairs in an array.
+
+#### Version 3 ####
+
+```php
+$this->TinyMCE->editor(array('theme' => 'simple', 'mode' => 'textareas'));
+```
+
+#### Newest versions ####
 
 ```php
 $this->TinyMCE->editor(array('theme' => 'modern', 'selector' => 'textarea'));
@@ -27,6 +43,26 @@ The helper has a configs property which can be filled with data from database or
 
 Here is a basic example of configuration data:
 
+#### Version 3 ####
+
+```php
+$configs = array(
+	'simple' => array(
+		'mode' => 'textareas',
+		'theme' => 'simple',
+		'editor_selector' => 'mceSimple'
+	),
+	'advanced' => array(
+	    'mode' => 'textareas',
+	    'theme' => 'advanced',
+	    'editor_selector' => 'mceAdvanced'
+	)
+);
+$this->TinyMCE->configs = $configs;
+```
+
+#### Newest versions ####
+
 ```php
 $configs = array(
 	'modern' => array(
@@ -39,11 +75,20 @@ $configs = array(
 	    'elementpath' => false
 	)
 );
-
 $this->TinyMCE->configs = $configs;
 ```
 
-You can also put the configuration in APP/config/bootstap.php or another config file and load it. Inside the config file you have you can write the config as above to the TinyMce configuration:
+You can also put the configuration in APP/config/bootstrap.php or another config file and load it. Inside the config file you have you can write the config as above to the TinyMce configuration:
+
+#### Version 3 ####
+
+```php
+Configure::write('TinyMCE.configs', array(
+	'simple' => ...,
+	'advanced' => ...));
+```
+
+#### Newest Versions ####
 
 ```php
 Configure::write('TinyMCE.configs', array(
@@ -54,6 +99,14 @@ Configure::write('TinyMCE.configs', array(
 The different sets of configuration data will be auto loaded by the helper inside its constructor. It is suggested that you use this way of passing different configs to the helper because by this you'll be able to store all of them in one place.
 
 When you passed the configuration to the helper you can simply use it by calling the editor() method of the helper with a string that is equal to the key of the configuration in the array:
+
+#### Version 3 ####
+
+```php
+$this->TinyMCE->editor('simple'); // This matches the 'modern' config name we passed in earlier.
+```
+
+#### Newest Versions ####
 
 ```php
 $this->TinyMCE->editor('modern'); // This matches the 'modern' config name we passed in earlier.
