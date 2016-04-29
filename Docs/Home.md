@@ -6,7 +6,7 @@ This **TinyMCE** allows developers to quickly add the TinyMCE editor to their ap
 Requirements
 ------------
 
-* CakePHP 2.5+
+* CakePHP 3.0+
 * PHP 5.2.8+
 
 Documentation
