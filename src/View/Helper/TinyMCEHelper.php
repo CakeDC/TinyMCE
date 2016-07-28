@@ -46,7 +46,7 @@ class TinyMCEHelper extends Helper
      * @var array
      */
     protected $_defaultConfig = [
-        'script' => '/TinyMCE/js/tiny_mce4/tinymce.min.js',
+        'script' => '//cdn.tinymce.com/4/tinymce.min.js',
         'loadScript' => true
     ];
 
