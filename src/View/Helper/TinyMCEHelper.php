@@ -90,7 +90,12 @@ class TinyMCEHelper extends Helper
             if (is_array($value) && isset($value['function'])) {
                 $lines .= $option . ' : ' . $value['function'] . ',' . "\n";
             } else {
-                $lines .= Inflector::underscore($option) . ' : "' . $value . '",' . "\n";
+                if (is_string($value)) {
+                    $value = '"' . $value . '"';
+                } elseif (is_bool($value)) {
+                    $value = $value ? 'true' : 'false';
+                }
+                $lines .= Inflector::underscore($option) . ' : ' . $value . ',' . "\n";
             }
         }
 
