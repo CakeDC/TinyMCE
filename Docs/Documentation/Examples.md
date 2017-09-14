@@ -1,17 +1,5 @@
 ## How to use the helper ##
 
-* Load it in the AppView for use helper where you want.
-
-
-```
-/src/View/AppView.php
-
-    public function initialize()
-    {
-        $this->loadHelper('TinyMCE.TinyMCE');
-    }
-```
-
 At the view's top where you want to use it, simply add the editor() method and pass config key/value pairs in an array.
 
 ```php
