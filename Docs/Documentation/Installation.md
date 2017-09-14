@@ -1,36 +1,66 @@
 Installation
 ============
 
-To install the plugin, place the files in a directory labelled "TinyMCE/" in your "app/Plugin/" directory.
+To install the plugin use composer.
 
-Git Submodule
--------------
+Composer
+--------
 
-If you're using git for version control, you may want to add the **TinyMCE** plugin as a submodule on your repository. To do so, run the following command from the base of your repository:
-
-```
-git submodule add git@github.com:CakeDC/TinyMCE.git app/Plugin/TinyMCE
-```
-
-After doing so, you will see the submodule in your changes pending, plus the file ".gitmodules". Simply commit and push to your repository.
-
-To initialize the submodule(s) run the following command:
+Last release for CakePHP 3.x
 
 ```
-git submodule update --init --recursive
+composer require cakedc/tiny-mce 2.0.0
+
+```
+
+If you want to use the branch of developer for CakePHP 3.x
+
+```
+composer require cakedc/tiny-mce 3.x-dev
+
+```
+
+
+
+Load the plugin in your bootstrap file
+
+```
+//config/bootstrap.php
+
+Plugin::load('TinyMCE');
+
+```
+
+Load the Helper of plugin in yor App View
+
+```
+//src/View/AppView.php
+ public function initialize()
+    {
+        parent::initialize();
+
+        $this->loadHelper('TinyMCE.TinyMCE');
+    }
 ```
 
 To retreive the latest updates to the plugin, assuming you're using the "master" branch, go to "app/Plugin/TinyMCE" and run the following command:
 
 ```
-git pull origin master
+composer update
+
 ```
 
-If you're using another branch, just change "master" for the branch you are currently using.
-
-If any updates are added, go back to the base of your own repository, commit and push your changes. This will update your repository to point to the latest updates to the plugin.
-
-Composer
+Fork
 --------
 
-The plugin also provides a "composer.json" file, to easily use the plugin through the Composer dependency manager.
+If you want to contribute with the plugin fork the repository and changes your composer.json
+of you application with this.
+
+```
+"repositories": [
+        {
+            "type": "vcs",
+            "url": "git@github.com:**Your-User**/TinyMCE.git"
+        }
+    ],
+```
