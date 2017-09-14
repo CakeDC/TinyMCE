@@ -1,11 +1,5 @@
 ## How to use the helper ##
 
-Load it in the controller where you want to use it.
-
-```php
-public $helpers = ['TinyMCE.TinyMCE'];
-```
-
 At the view's top where you want to use it, simply add the editor() method and pass config key/value pairs in an array.
 
 ```php
@@ -14,61 +8,50 @@ $this->TinyMCE->editor(['theme' => 'modern', 'selector' => 'textarea']);
 
 This will instruct TinyMCE to convert all `textarea` elements on the page to TinyMCE editors. If you require some more precise control, or want to change this behavior, checkout the [TinyMCE configuration options](http://www.tinymce.com/wiki.php/Configuration) on the TinyMCE website.
 
+* You can use CSS selectors for specific textarea **id** like this: 
+
+```php
+$this->TinyMCE->editor(['theme' => 'modern', 'selector' => '#editor']);
+```
+
 You need to add the jQuery file to make it work the helper.
 
 ```php
-echo $this->Html->script('jquery-x.x.x.min');
+echo $this->Html->script('//code.jquery.com/jquery-3.2.1.min.js', 'block' => true);
 ```
 
-Multiple configurations
------------------------
-
-The helper has a configs property which can be filled with data from database or a config file. How you store, get and pass that data to the helper is up to you. The configs property of the helper takes an array with named keys where the keys are used to load the configs.
-
-Here is a basic example of configuration data:
-
-```php
-$configs = [
-	'modern' => [
-		'selector' => 'textarea',
-		'theme' => 'modern'
-	],
-	'withoutPath' => [
-	    'selector' => 'textarea',
-	    'theme' => 'modern',
-	    'elementpath' => false
-	]
-];
-$this->TinyMCE->configs = $configs;
-```
-
-You can also put the configuration in APP/config/bootstrap.php or another config file and load it. Inside the config file you have you can write the config as above to the TinyMce configuration:
-
-```php
-Configure::write('TinyMCE.configs', [
-	'modern' => ...,
-	'withoutPath' => ...]);
-```
-
-The different sets of configuration data will be auto loaded by the helper inside its constructor. It is suggested that you use this way of passing different configs to the helper because by this you'll be able to store all of them in one place.
-
-When you passed the configuration to the helper you can simply use it by calling the editor() method of the helper with a string that is equal to the key of the configuration in the array:
-
-```php
-$this->TinyMCE->editor('modern'); // This matches the 'modern' config name we passed in earlier.
-```
 
 Application wide default options
 --------------------------------
 
-If you want a quick way to configure default values for all the TinyMCE Editors of an application, you could use the 'TinyMCE.editorOptions' configuration.
+The helper has a configs property which can be filled with data from database or a config file. How you store, get and pass that data to the helper is up to you. The configs property of the helper takes an array with named keys where the keys are used to load the configs.
 
-Here is an example of a line you could have in `bootstrap.php`:
+* If you want use your own config file load the plugin with bootstrap **false**
 
-```php
-Configure::write('TinyMCE.editorOptions', ['height' => '300px'])
+```
+Plugin::load('TinyMCE', ['routes' => false, 'bootstrap' => false]);
+
+```
+* Copy the config file of the plugin in your config folder for the initial configurations for the all editors
+
+
+```
+/vendor/cakedc/tiny-mce/config/tiny_mce.php
+
+return [
+    'TinyMCE' => [
+        ......
+        ],
+    ]
+];
+
 ```
 
-It will make all editors to have a 300px height. You may want to override this value for a single editor. To do so, just pass the option to the editor() method and it will override the default value.
+* In bootstrap.php file of your application, load your config file
 
-You can always check the tests to see how to use the helper.
+
+```
+/config/bootstrap.php
+
+Configure::load('tiny_mce', 'default');
+```

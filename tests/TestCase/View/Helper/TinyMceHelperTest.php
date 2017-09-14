@@ -2,6 +2,7 @@
 namespace TinyMCE\Test\TestCase\View\Helper;
 
 use Cake\Controller\Controller;
+use Cake\Core\Configure;
 use Cake\TestSuite\TestCase;
 use Cake\View\Helper\HtmlHelper;
 use Cake\View\View;
