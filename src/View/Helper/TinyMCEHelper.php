@@ -63,7 +63,7 @@ class TinyMCEHelper extends Helper
         if (!empty($configs) && is_array($configs)) {
             $this->configs = $configs;
         }
-        $this->settings = array_merge($this->_defaultConfig, $settings);
+        $this->settings = array_merge($this->_defaultConfig, empty($settings) ? Configure::read('TinyMCE.settings') : $settings);
     }
 
     /**
