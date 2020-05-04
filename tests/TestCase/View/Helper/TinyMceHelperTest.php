@@ -2,6 +2,7 @@
 namespace TinyMCE\Test\TestCase\View\Helper;
 
 use Cake\Controller\Controller;
+use Cake\Core\Configure;
 use Cake\TestSuite\TestCase;
 use Cake\View\Helper\HtmlHelper;
 use Cake\View\View;
@@ -10,14 +11,14 @@ use TinyMCE\View\Helper\TinyMCEHelper;
 /**
  * CakePHP TinyMce Plugin
  *
- * Copyright 2009 - 2010, Cake Development Corporation
+ * Copyright 2009 - 2020, Cake Development Corporation
  *                        1785 E. Sahara Avenue, Suite 490-423
  *                        Las Vegas, Nevada 89104
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright 2009 - 2010, Cake Development Corporation (http://cakedc.com)
+ * @copyright 2009 - 2020, Cake Development Corporation (http://cakedc.com)
  * @link      http://github.com/CakeDC/TinyMce
  * @package   TinyMce.Test.Case.View.Helper
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
@@ -84,13 +85,13 @@ class TinyMCETest extends TestCase
      * @return void
      * @access public
      */
-    public function setUp()
+    public function setUp(): void
     {
         Configure::write('Asset.timestamp', false);
 
         $this->View = new View(null);
         $this->TinyMCE = new TinyMCEHelper($this->View);
-        $this->TinyMCE->Html = $this->getMock('HtmlHelper', ['script'], [$this->View]);
+        $this->TinyMCE->Html = $this->getMockBuilder('HtmlHelper', ['script'], [$this->View])->getMock();
     }
 
     /**
@@ -99,7 +100,7 @@ class TinyMCETest extends TestCase
      * @return void
      * @access public
      */
-    public function tearDown()
+    public function tearDown(): void
     {
         unset($this->TinyMCE, $this->View);
     }
@@ -110,7 +111,7 @@ class TinyMCETest extends TestCase
      * @return void
      * @access public
      */
-    public function testEditor()
+    public function testEditor(): void
     {
         $this->TinyMCE->Html->expects($this->any())
             ->method('scriptBlock')
@@ -154,7 +155,7 @@ class TinyMCETest extends TestCase
      */
     public function testEditorWithDefaults()
     {
-        $this->assertTrue(Configure::write('TinyMCE.editorOptions', ['height' => '100px']));
+        Configure::write('TinyMCE.editorOptions', ['height' => '100px']);
 
         $this->TinyMCE->Html->expects($this->any())
             ->method('scriptBlock')
@@ -193,7 +194,7 @@ class TinyMCETest extends TestCase
      * @return void
      * @access public
      */
-    public function testBeforeRender()
+    public function testBeforeRender(): void
     {
         $this->TinyMCE->Html->expects($this->any())
             ->method('script')

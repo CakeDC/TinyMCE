@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 namespace TinyMCE\View\Helper;
 
 use Cake\Core\Configure;
@@ -8,7 +10,7 @@ use Cake\View\View;
 use Exception;
 
 /**
- * Copyright 2009-2013, Cake Development Corporation (http://cakedc.com)
+ * Copyright 2009-2020, Cake Development Corporation (http://cakedc.com)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
@@ -20,8 +22,7 @@ use Exception;
 /**
  * TinyMCE Helper
  *
- * @package TinyMCE
- * @subpackage TinyMCE.View.Helper
+ * @property \Cake\View\Helper\HtmlHelper $Html
  */
 class TinyMCEHelper extends Helper
 {
@@ -39,6 +40,14 @@ class TinyMCEHelper extends Helper
      * @var array
      */
     public $configs = [];
+
+
+    /**
+     * Settings
+     *
+     * @var array
+     */
+    public $settings = [];
 
     /**
      * Default values
@@ -63,7 +72,7 @@ class TinyMCEHelper extends Helper
         if (!empty($configs) && is_array($configs)) {
             $this->configs = $configs;
         }
-        $this->settings = array_merge($this->_defaultConfig, empty($settings) ? Configure::read('TinyMCE.settings') : $settings);
+        $this->settings = array_merge($this->_defaultConfig, $settings ?? Configure::read('TinyMCE.settings', []));
     }
 
     /**
@@ -71,10 +80,10 @@ class TinyMCEHelper extends Helper
      *
      * @see http://www.tinymce.com/wiki.php/Configuration for a list of keys
      * @throws Exception
-     * @param mixed If array camel cased TinyMCE Init config keys, if string it checks if a config with that name exists
+     * @param mixed $options If array camel cased TinyMCE Init config keys, if string it checks if a config with that name exists
      * @return void
      */
-    public function editor($options = [])
+    public function editor($options = []): void
     {
         if (is_string($options)) {
             if (isset($this->configs[$options])) {
@@ -111,7 +120,7 @@ class TinyMCEHelper extends Helper
      * @param string $viewFile The view file that is going to be rendered
      * @return void
      */
-    public function beforeRender($viewFile)
+    public function beforeRender($viewFile): void
     {
         $appOptions = Configure::read('TinyMCE.editorOptions');
         if ($appOptions !== false && is_array($appOptions)) {
