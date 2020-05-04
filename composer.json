@@ -1,30 +1,46 @@
 {
-	"name": "cakedc/tiny-mce",
-	"description": "TinyMCE Plugin for CakePHP",
-	"type": "cakephp-plugin",
-	"keywords": ["tinymce", "wysiwyg", "editor"],
-	"homepage": "http://cakedc.com",
-	"license": "MIT",
-	"authors": [
-		{
-			"name": "Cake Development Corporation",
-			"email": "team@cakedc.com",
-			"homepage": "http://cakedc.com"
-		}
-	],
-	"support": {
-		"email": "team@cakedc.com",
-		"issues": "https://github.com/CakeDC/TinyMCE/issues",
-		"forum": "http://stackoverflow.com/tags/cakedc",
-		"wiki": "https://github.com/CakeDC/TinyMCE/blob/master/Docs/Home.md",
-		"irc": "irc://irc.freenode.org/cakephp",
-		"source": "https://github.com/CakeDC/TinyMCE"
-	},
-	"require": {
-		"php": ">=5.2.8",
-		"composer/installers": "*"
-	},
-	"extra": {
-		"installer-name": "TinyMCE"
-	}
+    "name": "cakedc/tiny-mce",
+    "description": "TinyMCE Plugin for CakePHP",
+    "type": "cakephp-plugin",
+    "keywords": ["tinymce", "wysiwyg", "editor"],
+    "homepage": "https://github.com/CakeDC/TinyMCE",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Cake Development Corporation",
+            "email": "team@cakedc.com",
+            "homepage": "http://cakedc.com"
+        }
+    ],
+    "support": {
+        "email": "team@cakedc.com",
+        "issues": "https://github.com/CakeDC/TinyMCE/issues",
+        "forum": "http://stackoverflow.com/tags/cakedc",
+        "wiki": "https://github.com/CakeDC/TinyMCE/blob/master/Docs/Home.md",
+        "irc": "irc://irc.freenode.org/cakephp",
+        "source": "https://github.com/CakeDC/TinyMCE"
+    },
+    "require": {
+        "php": ">=5.2.8",
+        "cakephp/plugin-installer": "*"
+    },
+    "require-dev": {
+        "cakephp/cakephp": "~3.0",
+        "phpunit/phpunit": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "TinyMCE\\": "src",
+            "TinyMCE\\Test\\": "tests"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "TinyMCE\\Test\\": "tests",
+            "Cake\\Test\\": "vendor/cakephp/cakephp/tests"
+        }
+    },
+    "extra": {
+        "installer-name": "TinyMCE"
+    }
 }

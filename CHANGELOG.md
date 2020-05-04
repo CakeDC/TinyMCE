@@ -1,6 +1,13 @@
 Changelog
 =========
 
+Release 1.3.0
+-------------
+
+https://github.com/CakeDC/TinyMCE/tree/1.3.0
+
+ * [65ea3c5](https://github.com/CakeDC/TinyMCE/pull/40/commits/65ea3c5) Upgrading TinyMCE to 4.3.8
+
 Release 1.2.0
 -------------
 
