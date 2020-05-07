@@ -51,7 +51,7 @@ class TheTinyMCETestController extends Controller
  *
  * @package       TinyMCE.Test.Case.View.Helper
  */
-class TinyMCETest extends TestCase
+class TinyMCEHelperTest extends TestCase
 {
 
     /**
