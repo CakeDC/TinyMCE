@@ -24,29 +24,6 @@ use TinyMCE\View\Helper\TinyMCEHelper;
  */
 
 /**
- * TheTinyMceTestController class
- *
- * @package       TinyMce.Test.Case.View.Helper
- */
-class TheTinyMCETestController extends Controller
-{
-
-    /**
-     * name property
-     *
-     * @var string 'TheTest'
-     */
-    public $name = 'TheTest';
-
-    /**
-     * uses property
-     *
-     * @var mixed null
-     */
-    public $uses = null;
-}
-
-/**
  * TinyMCEHelperTest class
  *
  * @package       TinyMCE.Test.Case.View.Helper
