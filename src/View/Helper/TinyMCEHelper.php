@@ -55,7 +55,7 @@ class TinyMCEHelper extends Helper
      * @var array
      */
     protected $_defaultConfig = [
-        'script' => '//cdn.tinymce.com/4/tinymce.min.js',
+        'script' => 'https://cdn.tiny.cloud/1/no-api-key/tinymce/5/tinymce.min.js',
         'loadScript' => true
     ];
 
@@ -127,7 +127,7 @@ class TinyMCEHelper extends Helper
             $this->_defaultConfig = $appOptions;
         }
         if ($this->settings['loadScript'] === true) {
-            $this->Html->script($this->settings['script'], ['block' => true]);
+            $this->Html->script($this->settings['script'], ['block' => true, 'referrerpolicy' => 'origin']);
         }
     }
 
