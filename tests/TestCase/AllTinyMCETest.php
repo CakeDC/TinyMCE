@@ -10,7 +10,7 @@ namespace TinyMCE\Test\TestCase;
  * @copyright Copyright 2010 - 2014, Cake Development Corporation (http://cakedc.com)
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
-class AllTinyMcePluginTest extends PHPUnit_Framework_TestSuite
+class AllTinyMCETest extends PHPUnit_Framework_TestSuite
 {
 
     /**
