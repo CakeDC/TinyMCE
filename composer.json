@@ -21,7 +21,7 @@
         "source": "https://github.com/CakeDC/TinyMCE"
     },
     "require": {
-        "php": ">=5.2.8",
+        "php": ">=5.6.0",
         "cakephp/plugin-installer": "*"
     },
     "require-dev": {
