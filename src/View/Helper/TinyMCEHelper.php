@@ -29,28 +29,28 @@ class TinyMCEHelper extends Helper
     /**
      * Other helpers used by FormHelper
      *
-     * @var array
+     * @var array<string>
      */
     public array $helpers = ['Html'];
 
     /**
      * Configuration
      *
-     * @var array
+     * @var array<string, mixed>
      */
     public array $configs = [];
 
     /**
      * Settings
      *
-     * @var array
+     * @var array<string, mixed>
      */
     public array $settings = [];
 
     /**
      * Default values
      *
-     * @var array
+     * @var array<string, mixed>
      */
     protected array $_defaultConfig = [
         'script' => 'https://cdn.tiny.cloud/1/no-api-key/tinymce/6/tinymce.min.js',
@@ -61,7 +61,7 @@ class TinyMCEHelper extends Helper
      * Constructor
      *
      * @param \Cake\View\View $View The View this helper is being attached to.
-     * @param array $settings Configuration settings for the helper.
+     * @param array<string, mixed> $settings Configuration settings for the helper.
      */
     public function __construct(View $View, array $settings = [])
     {
