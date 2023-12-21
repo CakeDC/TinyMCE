@@ -12,35 +12,12 @@ declare(strict_types=1);
  */
 namespace TinyMCE\Test\TestCase\View\Helper;
 
-use Cake\Controller\Controller;
 use Cake\Core\Configure;
 use Cake\TestSuite\TestCase;
 use Cake\View\Helper\HtmlHelper;
 use Cake\View\View;
 use Exception;
 use TinyMCE\View\Helper\TinyMCEHelper;
-
-/**
- * TheTinyMceTestController class
- *
- * @package       TinyMce.Test.Case.View.Helper
- */
-class TheTinyMCETestController extends Controller
-{
-    /**
-     * name property
-     *
-     * @var string 'TheTest'
-     */
-    public string $name = 'TheTest';
-
-    /**
-     * uses property
-     *
-     * @var mixed null
-     */
-    public mixed $uses = null;
-}
 
 /**
  * TinyMCEHelperTest class
