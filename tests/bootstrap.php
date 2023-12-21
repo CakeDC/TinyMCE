@@ -10,6 +10,7 @@ declare(strict_types=1);
  * @copyright Copyright 2013 - 2023, Cake Development Corporation (https://www.cakedc.com)
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
+use Cake\Core\Configure;
 
 /**
  * Test suite bootstrap.
@@ -41,4 +42,4 @@ if (file_exists($root . '/config/bootstrap.php')) {
 
 require $root . '/vendor/cakephp/cakephp/tests/bootstrap.php';
 
-Cake\Core\Configure::write('debug', true);
+Configure::write('debug', true);

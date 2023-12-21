@@ -17,6 +17,7 @@ use Cake\Core\Configure;
 use Cake\TestSuite\TestCase;
 use Cake\View\Helper\HtmlHelper;
 use Cake\View\View;
+use Exception;
 use TinyMCE\View\Helper\TinyMCEHelper;
 
 /**
@@ -135,7 +136,7 @@ TINYMCE;
 
     public function testEditorWithInvalidSettings(): void
     {
-        $this->expectException(\Exception::class);
+        $this->expectException(Exception::class);
         $this->TinyMCE->editor('invalid-config');
     }
 
