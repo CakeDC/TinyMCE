@@ -1,6 +1,10 @@
 Changelog
 =========
 
+Release 4.0
+ * Upgrading plugin to CakePHP 5.0
+ * Upgrading TinyMCE to 6.x
+
 Release 1.3.0
 -------------
 
