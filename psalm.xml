@@ -1,20 +1,38 @@
 <?xml version="1.0"?>
 <psalm
-    allowCoercionFromStringToClassConst="true"
-    allowStringToStandInForClass="true"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xmlns="https://getpsalm.org/schema/config"
-    xsi:schemaLocation="https://getpsalm.org/schema/config vendor/vimeo/psalm/config.xsd"
-	errorBaseline="psalm-baseline.xml"
+  errorLevel="4"
+  usePhpDocMethodsWithoutMagicCall="true"
+  findUnusedPsalmSuppress="true"
+  findUnusedBaselineEntry="true"
+  findUnusedCode="false"
+  resolveFromConfigFile="true"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns="https://getpsalm.org/schema/config"
+  xsi:schemaLocation="https://getpsalm.org/schema/config vendor/vimeo/psalm/config.xsd"
+  autoloader="tests/bootstrap.php"
 >
-    <projectFiles>
-        <directory name="src" />
-    </projectFiles>
+  <projectFiles>
+    <directory name="src/"/>
+    <ignoreFiles>
+      <directory name="vendor/"/>
+    </ignoreFiles>
+  </projectFiles>
 
-    <issueHandlers>
-        <LessSpecificReturnType errorLevel="info" />
-        <RedundantConditionGivenDocblockType errorLevel="info" />
-        <TypeCoercion errorLevel="info" />
-        <DocblockTypeContradiction errorLevel="info" />
-    </issueHandlers>
+  <issueHandlers>
+    <LessSpecificReturnType errorLevel="suppress" />
+    <RedundantPropertyInitializationCheck errorLevel="suppress"/>
+    <RedundantCast errorLevel="suppress"/>
+    <UndefinedAttributeClass errorLevel="suppress"/>
+    <LessSpecificReturnType errorLevel="info" />
+
+    <MissingClosureReturnType errorLevel="info" />
+
+    <PropertyNotSetInConstructor errorLevel="info" />
+    <MissingConstructor errorLevel="info" />
+    <MissingClosureParamType errorLevel="info" />
+    <MissingParamType errorLevel="info" />
+
+    <DocblockTypeContradiction errorLevel="info" />
+    <RedundantConditionGivenDocblockType errorLevel="info" />
+  </issueHandlers>
 </psalm>

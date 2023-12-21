@@ -1,12 +1,8 @@
-includes:
-    - phpstan-baseline.neon
-
 parameters:
-    level: 5
-    checkMissingIterableValueType: false
-    checkGenericClassInNonGenericObjectType: false
-    autoload_files:
-        - tests/bootstrap.php
-    ignoreErrors:
-
-services:
+	level: 8
+	treatPhpDocTypesAsCertain: false
+	checkGenericClassInNonGenericObjectType: false
+	bootstrapFiles:
+		- tests/bootstrap.php
+	paths:
+		- src/

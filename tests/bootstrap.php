@@ -2,6 +2,16 @@
 declare(strict_types=1);
 
 /**
+ * Copyright 2013 - 2023, Cake Development Corporation (https://www.cakedc.com)
+ *
+ * Licensed under The MIT License
+ * Redistributions of files must retain the above copyright notice.
+ *
+ * @copyright Copyright 2013 - 2023, Cake Development Corporation (https://www.cakedc.com)
+ * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
+ */
+
+/**
  * Test suite bootstrap.
  *
  * This function is used to find the location of CakePHP whether CakePHP
@@ -17,7 +27,7 @@ $findRoot = function ($root) {
         }
     } while ($root !== $lastRoot);
 
-    throw new Exception("Cannot find the root of the application, unable to run tests");
+    throw new Exception('Cannot find the root of the application, unable to run tests');
 };
 $root = $findRoot(__FILE__);
 unset($findRoot);
@@ -30,3 +40,5 @@ if (file_exists($root . '/config/bootstrap.php')) {
 }
 
 require $root . '/vendor/cakephp/cakephp/tests/bootstrap.php';
+
+Cake\Core\Configure::write('debug', true);
