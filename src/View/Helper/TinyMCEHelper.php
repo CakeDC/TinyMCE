@@ -119,10 +119,10 @@ class TinyMCEHelper extends Helper
     /**
      * beforeRender callback
      *
-     * @param string $viewFile The view file that is going to be rendered
+     * @param Event $event Ignored
      * @return void
      */
-    public function beforeRender(string $viewFile): void
+    public function beforeRender(Event $event): void
     {
         $appOptions = Configure::read('TinyMCE.editorOptions');
         if ($appOptions !== false && is_array($appOptions)) {
