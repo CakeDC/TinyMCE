@@ -133,7 +133,6 @@ theme : "modern"
 TINYMCE,
                 ['block' => true]
             );
-        $this->TinyMCE->beforeRender('test.ctp');
         $this->TinyMCE->editor(['theme' => 'modern']);
     }
 
@@ -170,6 +169,5 @@ TINYMCE,
                 'https://cdn.tiny.cloud/1/no-api-key/tinymce/6/tinymce.min.js',
                 ['block' => true, 'referrerpolicy' => true]
             );
-        $this->TinyMCE->beforeRender('test.ctp');
     }
 }

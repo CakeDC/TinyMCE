@@ -120,7 +120,7 @@ class TinyMCEHelper extends Helper
     /**
      * beforeRender callback
      *
-     * @param Event $event Ignored
+     * @param \Cake\Event\Event $event Ignored
      * @return void
      */
     public function beforeRender(Event $event): void
