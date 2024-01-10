@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace TinyMCE\View\Helper;
 
 use Cake\Core\Configure;
+use Cake\Event\Event;
 use Cake\Utility\Inflector;
 use Cake\View\Helper;
 use Cake\View\View;
