@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace TinyMCE\View\Helper;
 
 use Cake\Core\Configure;
+use Cake\Event\EventInterface;
 use Cake\Utility\Inflector;
 use Cake\View\Helper;
 use Cake\View\View;
@@ -119,10 +120,11 @@ class TinyMCEHelper extends Helper
     /**
      * beforeRender callback
      *
+     * @param \Cake\Event\EventInterface $event
      * @param string $viewFile The view file that is going to be rendered
      * @return void
      */
-    public function beforeRender(string $viewFile): void
+    public function beforeRender(EventInterface $event, string $viewFile): void
     {
         $appOptions = Configure::read('TinyMCE.editorOptions');
         if ($appOptions !== false && is_array($appOptions)) {

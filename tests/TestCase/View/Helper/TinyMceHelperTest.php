@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace TinyMCE\Test\TestCase\View\Helper;
 
 use Cake\Core\Configure;
+use Cake\Event\Event;
 use Cake\TestSuite\TestCase;
 use Cake\View\Helper\HtmlHelper;
 use Cake\View\View;
@@ -133,7 +134,8 @@ theme : "modern"
 TINYMCE,
                 ['block' => true]
             );
-        $this->TinyMCE->beforeRender('test.ctp');
+        $event = new Event('test');
+        $this->TinyMCE->beforeRender($event, 'test.ctp');
         $this->TinyMCE->editor(['theme' => 'modern']);
     }
 
@@ -170,6 +172,7 @@ TINYMCE,
                 'https://cdn.tiny.cloud/1/no-api-key/tinymce/6/tinymce.min.js',
                 ['block' => true, 'referrerpolicy' => true]
             );
-        $this->TinyMCE->beforeRender('test.ctp');
+        $event = new Event('test');
+        $this->TinyMCE->beforeRender($event, 'test.ctp');
     }
 }
